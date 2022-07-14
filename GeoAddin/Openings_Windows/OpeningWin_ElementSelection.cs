@@ -28,16 +28,28 @@ namespace GeoAddin.Openings_Windows
 {
     public partial class OpeningWin_ElementSelection : System.Windows.Forms.Form
     {
-        private UIDocument uidoc;
-
-        private Document doc;
-        public OpeningWin_ElementSelection()
+        public UIDocument uidoc;
+        public Document doc;
+        public UIApplication uiapp;
+        public RevitApplication app;
+        public OpeningWin_ElementSelection(UIApplication uiapp)
         {
             InitializeComponent();
+            uidoc = uiapp.ActiveUIDocument;
+            app = uiapp.Application;
+            doc = uidoc.Document;
         }
 
         private void OpeningWin_ElementSelection_Load(object sender, EventArgs e)
         {
+
+            FilteredElementCollector docCollector = new FilteredElementCollector(doc, doc.ActiveView.Id);
+            List<Element> elementsInView = (List<Element>)docCollector.ToElements();
+
+            foreach (var element in elementsInView)
+            {
+                System.Windows.Forms.MessageBox.Show(element.Category.Name.ToString());
+            }
 
         }
 

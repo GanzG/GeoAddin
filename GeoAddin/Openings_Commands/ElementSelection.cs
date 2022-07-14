@@ -34,7 +34,8 @@ namespace GeoAddin
             app = uiapp.Application;
             doc = uidoc.Document;
 
-            Openings_Windows.OpeningWin_ElementSelection win = new Openings_Windows.OpeningWin_ElementSelection();
+            Openings_Windows.OpeningWin_ElementSelection win = new Openings_Windows.OpeningWin_ElementSelection(uiapp);
+
             win.Show();
 
             return Result.Succeeded;
