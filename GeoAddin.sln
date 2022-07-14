@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoAddin", "GeoAddin\GeoAddin.csproj", "{ED9391A5-E6EE-44F9-9241-6F7CC402063E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED9391A5-E6EE-44F9-9241-6F7CC402063E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED9391A5-E6EE-44F9-9241-6F7CC402063E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED9391A5-E6EE-44F9-9241-6F7CC402063E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED9391A5-E6EE-44F9-9241-6F7CC402063E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41AD69D2-942E-4775-A73C-CF8C8689C5BB}
+	EndGlobalSection
+EndGlobal

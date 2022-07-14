@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command GeoAddin</Text>
+    <Description>Some description for GeoAddin</Description>
+    <Assembly>GeoAddin.dll</Assembly>
+    <FullClassName>GeoAddin.Command</FullClassName>
+    <ClientId>2eb32ee8-ff71-4ccf-95e5-60e045cf72a7</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application GeoAddin</Name>
+    <Assembly>GeoAddin.dll</Assembly>
+    <FullClassName>GeoAddin.App</FullClassName>
+    <ClientId>5ecc3193-4c4c-4713-8fba-89737b96e812</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
