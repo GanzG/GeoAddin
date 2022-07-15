@@ -55,15 +55,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.rule_1_comBox = new System.Windows.Forms.ComboBox();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.param_5_comBox = new System.Windows.Forms.ComboBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.param_1_comBox = new System.Windows.Forms.ComboBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.param_2_comBox = new System.Windows.Forms.ComboBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.param_3_comBox = new System.Windows.Forms.ComboBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.param_4_comBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -111,16 +106,16 @@
             this.CatGroup.Controls.Add(this.delete_bt);
             this.CatGroup.Controls.Add(this.add_bt);
             this.CatGroup.Controls.Add(this.cat_9_ComBox);
+            this.CatGroup.Controls.Add(this.cat_2_ComBox);
+            this.CatGroup.Controls.Add(this.cat_3_ComBox);
             this.CatGroup.Controls.Add(this.cat_8_ComBox);
+            this.CatGroup.Controls.Add(this.cat_4_ComBox);
+            this.CatGroup.Controls.Add(this.cat_5_ComBox);
             this.CatGroup.Controls.Add(this.cat_7_ComBox);
             this.CatGroup.Controls.Add(this.cat_6_ComBox);
-            this.CatGroup.Controls.Add(this.cat_5_ComBox);
-            this.CatGroup.Controls.Add(this.cat_4_ComBox);
-            this.CatGroup.Controls.Add(this.cat_3_ComBox);
-            this.CatGroup.Controls.Add(this.cat_2_ComBox);
             this.CatGroup.Location = new System.Drawing.Point(16, 41);
             this.CatGroup.Name = "CatGroup";
-            this.CatGroup.Size = new System.Drawing.Size(168, 272);
+            this.CatGroup.Size = new System.Drawing.Size(171, 101);
             this.CatGroup.TabIndex = 3;
             this.CatGroup.TabStop = false;
             // 
@@ -135,7 +130,7 @@
             // cat_8_ComBox
             // 
             this.cat_8_ComBox.FormattingEnabled = true;
-            this.cat_8_ComBox.Location = new System.Drawing.Point(6, 208);
+            this.cat_8_ComBox.Location = new System.Drawing.Point(195, 181);
             this.cat_8_ComBox.Name = "cat_8_ComBox";
             this.cat_8_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_8_ComBox.TabIndex = 9;
@@ -143,7 +138,7 @@
             // cat_7_ComBox
             // 
             this.cat_7_ComBox.FormattingEnabled = true;
-            this.cat_7_ComBox.Location = new System.Drawing.Point(6, 181);
+            this.cat_7_ComBox.Location = new System.Drawing.Point(195, 154);
             this.cat_7_ComBox.Name = "cat_7_ComBox";
             this.cat_7_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_7_ComBox.TabIndex = 8;
@@ -151,7 +146,7 @@
             // cat_6_ComBox
             // 
             this.cat_6_ComBox.FormattingEnabled = true;
-            this.cat_6_ComBox.Location = new System.Drawing.Point(6, 154);
+            this.cat_6_ComBox.Location = new System.Drawing.Point(195, 127);
             this.cat_6_ComBox.Name = "cat_6_ComBox";
             this.cat_6_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_6_ComBox.TabIndex = 7;
@@ -159,7 +154,7 @@
             // cat_5_ComBox
             // 
             this.cat_5_ComBox.FormattingEnabled = true;
-            this.cat_5_ComBox.Location = new System.Drawing.Point(6, 127);
+            this.cat_5_ComBox.Location = new System.Drawing.Point(195, 100);
             this.cat_5_ComBox.Name = "cat_5_ComBox";
             this.cat_5_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_5_ComBox.TabIndex = 6;
@@ -167,7 +162,7 @@
             // cat_4_ComBox
             // 
             this.cat_4_ComBox.FormattingEnabled = true;
-            this.cat_4_ComBox.Location = new System.Drawing.Point(6, 100);
+            this.cat_4_ComBox.Location = new System.Drawing.Point(195, 73);
             this.cat_4_ComBox.Name = "cat_4_ComBox";
             this.cat_4_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_4_ComBox.TabIndex = 5;
@@ -175,7 +170,7 @@
             // cat_3_ComBox
             // 
             this.cat_3_ComBox.FormattingEnabled = true;
-            this.cat_3_ComBox.Location = new System.Drawing.Point(6, 73);
+            this.cat_3_ComBox.Location = new System.Drawing.Point(195, 46);
             this.cat_3_ComBox.Name = "cat_3_ComBox";
             this.cat_3_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_3_ComBox.TabIndex = 4;
@@ -193,31 +188,26 @@
             this.ParamGroup.Controls.Add(this.label6);
             this.ParamGroup.Controls.Add(this.relationship_ComBox);
             this.ParamGroup.Controls.Add(this.textBox5);
-            this.ParamGroup.Controls.Add(this.rule_5_comBox);
-            this.ParamGroup.Controls.Add(this.textBox6);
-            this.ParamGroup.Controls.Add(this.rule_4_comBox);
-            this.ParamGroup.Controls.Add(this.textBox3);
-            this.ParamGroup.Controls.Add(this.rule_3_comBox);
-            this.ParamGroup.Controls.Add(this.textBox2);
-            this.ParamGroup.Controls.Add(this.rule_2_comBox);
             this.ParamGroup.Controls.Add(this.label5);
             this.ParamGroup.Controls.Add(this.textBox1);
+            this.ParamGroup.Controls.Add(this.rule_5_comBox);
             this.ParamGroup.Controls.Add(this.label4);
             this.ParamGroup.Controls.Add(this.label3);
+            this.ParamGroup.Controls.Add(this.textBox6);
             this.ParamGroup.Controls.Add(this.rule_1_comBox);
-            this.ParamGroup.Controls.Add(this.checkBox6);
-            this.ParamGroup.Controls.Add(this.param_5_comBox);
-            this.ParamGroup.Controls.Add(this.checkBox1);
             this.ParamGroup.Controls.Add(this.param_1_comBox);
-            this.ParamGroup.Controls.Add(this.checkBox2);
+            this.ParamGroup.Controls.Add(this.rule_4_comBox);
             this.ParamGroup.Controls.Add(this.param_2_comBox);
-            this.ParamGroup.Controls.Add(this.checkBox3);
-            this.ParamGroup.Controls.Add(this.param_3_comBox);
-            this.ParamGroup.Controls.Add(this.checkBox4);
+            this.ParamGroup.Controls.Add(this.rule_2_comBox);
+            this.ParamGroup.Controls.Add(this.textBox3);
+            this.ParamGroup.Controls.Add(this.param_5_comBox);
             this.ParamGroup.Controls.Add(this.param_4_comBox);
-            this.ParamGroup.Location = new System.Drawing.Point(220, 41);
+            this.ParamGroup.Controls.Add(this.textBox2);
+            this.ParamGroup.Controls.Add(this.rule_3_comBox);
+            this.ParamGroup.Controls.Add(this.param_3_comBox);
+            this.ParamGroup.Location = new System.Drawing.Point(211, 41);
             this.ParamGroup.Name = "ParamGroup";
-            this.ParamGroup.Size = new System.Drawing.Size(397, 272);
+            this.ParamGroup.Size = new System.Drawing.Size(396, 137);
             this.ParamGroup.TabIndex = 4;
             this.ParamGroup.TabStop = false;
             // 
@@ -225,7 +215,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(89, 236);
+            this.label6.Location = new System.Drawing.Point(89, 101);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(204, 17);
             this.label6.TabIndex = 47;
@@ -234,14 +224,14 @@
             // relationship_ComBox
             // 
             this.relationship_ComBox.FormattingEnabled = true;
-            this.relationship_ComBox.Location = new System.Drawing.Point(301, 235);
+            this.relationship_ComBox.Location = new System.Drawing.Point(301, 100);
             this.relationship_ComBox.Name = "relationship_ComBox";
             this.relationship_ComBox.Size = new System.Drawing.Size(88, 21);
             this.relationship_ComBox.TabIndex = 45;
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(301, 194);
+            this.textBox5.Location = new System.Drawing.Point(713, 130);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(90, 20);
             this.textBox5.TabIndex = 44;
@@ -249,14 +239,14 @@
             // rule_5_comBox
             // 
             this.rule_5_comBox.FormattingEnabled = true;
-            this.rule_5_comBox.Location = new System.Drawing.Point(190, 193);
+            this.rule_5_comBox.Location = new System.Drawing.Point(602, 129);
             this.rule_5_comBox.Name = "rule_5_comBox";
             this.rule_5_comBox.Size = new System.Drawing.Size(90, 21);
             this.rule_5_comBox.TabIndex = 43;
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(301, 158);
+            this.textBox6.Location = new System.Drawing.Point(713, 94);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(90, 20);
             this.textBox6.TabIndex = 42;
@@ -264,14 +254,14 @@
             // rule_4_comBox
             // 
             this.rule_4_comBox.FormattingEnabled = true;
-            this.rule_4_comBox.Location = new System.Drawing.Point(190, 157);
+            this.rule_4_comBox.Location = new System.Drawing.Point(602, 93);
             this.rule_4_comBox.Name = "rule_4_comBox";
             this.rule_4_comBox.Size = new System.Drawing.Size(90, 21);
             this.rule_4_comBox.TabIndex = 41;
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(301, 123);
+            this.textBox3.Location = new System.Drawing.Point(713, 59);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(90, 20);
             this.textBox3.TabIndex = 40;
@@ -279,14 +269,14 @@
             // rule_3_comBox
             // 
             this.rule_3_comBox.FormattingEnabled = true;
-            this.rule_3_comBox.Location = new System.Drawing.Point(190, 122);
+            this.rule_3_comBox.Location = new System.Drawing.Point(602, 58);
             this.rule_3_comBox.Name = "rule_3_comBox";
             this.rule_3_comBox.Size = new System.Drawing.Size(90, 21);
             this.rule_3_comBox.TabIndex = 39;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(301, 85);
+            this.textBox2.Location = new System.Drawing.Point(713, 21);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(90, 20);
             this.textBox2.TabIndex = 38;
@@ -294,7 +284,7 @@
             // rule_2_comBox
             // 
             this.rule_2_comBox.FormattingEnabled = true;
-            this.rule_2_comBox.Location = new System.Drawing.Point(190, 84);
+            this.rule_2_comBox.Location = new System.Drawing.Point(602, 20);
             this.rule_2_comBox.Name = "rule_2_comBox";
             this.rule_2_comBox.Size = new System.Drawing.Size(90, 21);
             this.rule_2_comBox.TabIndex = 37;
@@ -344,89 +334,44 @@
             this.rule_1_comBox.Size = new System.Drawing.Size(90, 21);
             this.rule_1_comBox.TabIndex = 33;
             // 
-            // checkBox6
-            // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.Location = new System.Drawing.Point(12, 196);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(15, 14);
-            this.checkBox6.TabIndex = 29;
-            this.checkBox6.UseVisualStyleBackColor = true;
-            // 
             // param_5_comBox
             // 
             this.param_5_comBox.FormattingEnabled = true;
-            this.param_5_comBox.Location = new System.Drawing.Point(33, 193);
+            this.param_5_comBox.Location = new System.Drawing.Point(430, 129);
             this.param_5_comBox.Name = "param_5_comBox";
-            this.param_5_comBox.Size = new System.Drawing.Size(136, 21);
+            this.param_5_comBox.Size = new System.Drawing.Size(151, 21);
             this.param_5_comBox.TabIndex = 27;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(12, 159);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(15, 14);
-            this.checkBox1.TabIndex = 26;
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // param_1_comBox
             // 
             this.param_1_comBox.FormattingEnabled = true;
-            this.param_1_comBox.Location = new System.Drawing.Point(33, 48);
+            this.param_1_comBox.Location = new System.Drawing.Point(18, 48);
             this.param_1_comBox.Name = "param_1_comBox";
-            this.param_1_comBox.Size = new System.Drawing.Size(136, 21);
+            this.param_1_comBox.Size = new System.Drawing.Size(151, 21);
             this.param_1_comBox.TabIndex = 19;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(12, 125);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(15, 14);
-            this.checkBox2.TabIndex = 25;
-            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // param_2_comBox
             // 
             this.param_2_comBox.FormattingEnabled = true;
-            this.param_2_comBox.Location = new System.Drawing.Point(33, 84);
+            this.param_2_comBox.Location = new System.Drawing.Point(430, 20);
             this.param_2_comBox.Name = "param_2_comBox";
-            this.param_2_comBox.Size = new System.Drawing.Size(136, 21);
+            this.param_2_comBox.Size = new System.Drawing.Size(151, 21);
             this.param_2_comBox.TabIndex = 20;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(12, 87);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(15, 14);
-            this.checkBox3.TabIndex = 24;
-            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // param_3_comBox
             // 
             this.param_3_comBox.FormattingEnabled = true;
-            this.param_3_comBox.Location = new System.Drawing.Point(33, 122);
+            this.param_3_comBox.Location = new System.Drawing.Point(430, 58);
             this.param_3_comBox.Name = "param_3_comBox";
-            this.param_3_comBox.Size = new System.Drawing.Size(136, 21);
+            this.param_3_comBox.Size = new System.Drawing.Size(151, 21);
             this.param_3_comBox.TabIndex = 21;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(12, 51);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(15, 14);
-            this.checkBox4.TabIndex = 23;
-            this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // param_4_comBox
             // 
             this.param_4_comBox.FormattingEnabled = true;
-            this.param_4_comBox.Location = new System.Drawing.Point(33, 156);
+            this.param_4_comBox.Location = new System.Drawing.Point(430, 92);
             this.param_4_comBox.Name = "param_4_comBox";
-            this.param_4_comBox.Size = new System.Drawing.Size(136, 21);
+            this.param_4_comBox.Size = new System.Drawing.Size(151, 21);
             this.param_4_comBox.TabIndex = 22;
             // 
             // label1
@@ -443,7 +388,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(215, 18);
+            this.label2.Location = new System.Drawing.Point(207, 18);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(174, 20);
             this.label2.TabIndex = 6;
@@ -571,6 +516,7 @@
             this.delete_bt.Size = new System.Drawing.Size(26, 26);
             this.delete_bt.TabIndex = 19;
             this.delete_bt.UseVisualStyleBackColor = false;
+            this.delete_bt.Click += new System.EventHandler(this.delete_bt_Click);
             // 
             // add_bt
             // 
@@ -583,6 +529,7 @@
             this.add_bt.Size = new System.Drawing.Size(26, 26);
             this.add_bt.TabIndex = 18;
             this.add_bt.UseVisualStyleBackColor = false;
+            this.add_bt.Click += new System.EventHandler(this.add_bt_Click);
             // 
             // mainGroup
             // 
@@ -599,9 +546,9 @@
             this.mainGroup.Controls.Add(this.clearAll_bt);
             this.mainGroup.Controls.Add(this.loadDGV_bt);
             this.mainGroup.Controls.Add(this.saveDGV_bt);
-            this.mainGroup.Location = new System.Drawing.Point(16, 319);
+            this.mainGroup.Location = new System.Drawing.Point(16, 195);
             this.mainGroup.Name = "mainGroup";
-            this.mainGroup.Size = new System.Drawing.Size(601, 397);
+            this.mainGroup.Size = new System.Drawing.Size(593, 397);
             this.mainGroup.TabIndex = 18;
             this.mainGroup.TabStop = false;
             // 
@@ -609,7 +556,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(625, 726);
+            this.ClientSize = new System.Drawing.Size(619, 609);
             this.Controls.Add(this.mainGroup);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -661,15 +608,10 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox rule_1_comBox;
-        private System.Windows.Forms.CheckBox checkBox6;
         private System.Windows.Forms.ComboBox param_5_comBox;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ComboBox param_1_comBox;
-        private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.ComboBox param_2_comBox;
-        private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.ComboBox param_3_comBox;
-        private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.ComboBox param_4_comBox;
         private System.Windows.Forms.Label Результат;
         private System.Windows.Forms.Button result_bt;

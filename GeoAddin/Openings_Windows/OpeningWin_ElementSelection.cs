@@ -35,6 +35,7 @@ namespace GeoAddin.Openings_Windows
         public RevitApplication app;
 
         public bool threadState = true;
+        public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
             InitializeComponent();
@@ -55,6 +56,8 @@ namespace GeoAddin.Openings_Windows
 
             FilteredElementCollector docCollector = new FilteredElementCollector(doc, doc.ActiveView.Id);
             List<Element> elementsInView = (List<Element>)docCollector.ToElements();
+
+            for (int i = 2; i<=9; i++) (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(elementsInView);
 
             //foreach (var element in elementsInView)
             //{
@@ -78,6 +81,32 @@ namespace GeoAddin.Openings_Windows
         {
             threadState = false;
             this.Close();
+        }
+
+        private void add_bt_Click(object sender, EventArgs e)
+        {
+            //System.Windows.Forms.MessageBox.Show(Convert.ToString(count));
+            if (count <= 8 && (CatGroup.Controls["cat_" + count + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+            {
+                System.Drawing.Point oldLoc = (CatGroup.Controls["cat_" + count + "_ComBox"] as System.Windows.Forms.ComboBox).Location;
+                count++;
+
+                CatGroup.Height = 27 * (count - 1) + 46;
+
+                string cb_name = "cat_" + count + "_ComBox";
+                (CatGroup.Controls[cb_name] as System.Windows.Forms.ComboBox).Location = new System.Drawing.Point(oldLoc.X, oldLoc.Y + 27);
+
+                if (mainGroup.Location.Y - (CatGroup.Location.Y + CatGroup.Height) <= 17)
+                {
+                    mainGroup.Location = new System.Drawing.Point(mainGroup.Location.X, mainGroup.Location.Y + (17 - (mainGroup.Location.Y - (CatGroup.Location.Y + CatGroup.Height))));
+                    this.Height = mainGroup.Location.Y + mainGroup.Height + 56;
+                }
+            }
+        }
+
+        private void delete_bt_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
