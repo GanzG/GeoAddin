@@ -121,19 +121,28 @@
   <data name="ApartmentgraphyPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ApartmentgraphyPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DetachFilePic" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DetachFilePic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="OpeningPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpeningPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RoomGenPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RoomGenPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="WindowFilling" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WindowFilling.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DetachFilePic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DetachFilePic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="WindowSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WindowSchema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RoomGenPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RoomGenPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dialog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dialog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

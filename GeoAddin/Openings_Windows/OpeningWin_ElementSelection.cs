@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows;
@@ -32,6 +33,8 @@ namespace GeoAddin.Openings_Windows
         public Document doc;
         public UIApplication uiapp;
         public RevitApplication app;
+
+        public bool threadState = true;
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
             InitializeComponent();
@@ -42,19 +45,38 @@ namespace GeoAddin.Openings_Windows
 
         private void OpeningWin_ElementSelection_Load(object sender, EventArgs e)
         {
+            System.Drawing.Image add, delete, dialog;
+            add = new Bitmap((System.Drawing.Image)Properties.Resources.add ,28,28);
+            delete = new Bitmap((System.Drawing.Image)Properties.Resources.delete, 28, 28);
+            dialog = new Bitmap((System.Drawing.Image)Properties.Resources.dialog, 16, 16);
+            
+            add_bt.BackgroundImage = add;
+            delete_bt.BackgroundImage = delete;
 
             FilteredElementCollector docCollector = new FilteredElementCollector(doc, doc.ActiveView.Id);
             List<Element> elementsInView = (List<Element>)docCollector.ToElements();
 
-            foreach (var element in elementsInView)
-            {
-                System.Windows.Forms.MessageBox.Show(element.Category.Name.ToString());
-            }
+            //foreach (var element in elementsInView)
+            //{
+            //    System.Windows.Forms.MessageBox.Show(element.Category.Name.ToString());
+            //}
 
+            Task.Factory.StartNew(deformationControl);
+
+        }
+
+        public void deformationControl()
+        {
+            while (threadState)
+            {
+                //System.Windows.Forms.MessageBox.Show("");
+                //Thread.Sleep(500);
+            }
         }
 
         private void close_bt_Click(object sender, EventArgs e)
         {
+            threadState = false;
             this.Close();
         }
     }

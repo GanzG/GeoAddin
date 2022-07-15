@@ -109,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="GeoAddin.addin" />
+    <Content Include="Openings_Windows\add.png" />
+    <Content Include="Openings_Windows\delete.jpg" />
+    <Content Include="Openings_Windows\dialog.png" />
+    <None Include="Resources\dialog.png" />
+    <None Include="Resources\delete.jpg" />
+    <None Include="Resources\add.png" />
     <None Include="Resources\WindowFilling.png" />
     <None Include="Resources\DetachFilePic.png" />
     <None Include="Resources\OpeningPic.png" />
