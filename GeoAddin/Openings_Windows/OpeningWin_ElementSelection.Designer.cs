@@ -76,6 +76,8 @@
             this.delete_bt = new System.Windows.Forms.Button();
             this.add_bt = new System.Windows.Forms.Button();
             this.mainGroup = new System.Windows.Forms.GroupBox();
+            this.cat_rb = new System.Windows.Forms.RadioButton();
+            this.rule_rb = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
@@ -103,8 +105,6 @@
             // 
             // CatGroup
             // 
-            this.CatGroup.Controls.Add(this.delete_bt);
-            this.CatGroup.Controls.Add(this.add_bt);
             this.CatGroup.Controls.Add(this.cat_9_ComBox);
             this.CatGroup.Controls.Add(this.cat_2_ComBox);
             this.CatGroup.Controls.Add(this.cat_3_ComBox);
@@ -511,11 +511,12 @@
             this.delete_bt.BackColor = System.Drawing.Color.Transparent;
             this.delete_bt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.delete_bt.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.delete_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.delete_bt.Location = new System.Drawing.Point(102, 14);
+            this.delete_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.delete_bt.Location = new System.Drawing.Point(258, 361);
             this.delete_bt.Name = "delete_bt";
-            this.delete_bt.Size = new System.Drawing.Size(26, 26);
+            this.delete_bt.Size = new System.Drawing.Size(82, 26);
             this.delete_bt.TabIndex = 19;
+            this.delete_bt.Text = "Удалить";
             this.delete_bt.UseVisualStyleBackColor = false;
             this.delete_bt.Click += new System.EventHandler(this.delete_bt_Click);
             // 
@@ -524,16 +525,21 @@
             this.add_bt.BackColor = System.Drawing.Color.Transparent;
             this.add_bt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.add_bt.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.add_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.add_bt.Location = new System.Drawing.Point(135, 14);
+            this.add_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.add_bt.Location = new System.Drawing.Point(258, 330);
             this.add_bt.Name = "add_bt";
-            this.add_bt.Size = new System.Drawing.Size(26, 26);
+            this.add_bt.Size = new System.Drawing.Size(82, 26);
             this.add_bt.TabIndex = 18;
+            this.add_bt.Text = "Добавить";
             this.add_bt.UseVisualStyleBackColor = false;
             this.add_bt.Click += new System.EventHandler(this.add_bt_Click);
             // 
             // mainGroup
             // 
+            this.mainGroup.Controls.Add(this.rule_rb);
+            this.mainGroup.Controls.Add(this.cat_rb);
+            this.mainGroup.Controls.Add(this.delete_bt);
+            this.mainGroup.Controls.Add(this.add_bt);
             this.mainGroup.Controls.Add(this.Результат);
             this.mainGroup.Controls.Add(this.button3);
             this.mainGroup.Controls.Add(this.close_bt);
@@ -552,6 +558,28 @@
             this.mainGroup.Size = new System.Drawing.Size(593, 397);
             this.mainGroup.TabIndex = 18;
             this.mainGroup.TabStop = false;
+            // 
+            // cat_rb
+            // 
+            this.cat_rb.AutoSize = true;
+            this.cat_rb.Location = new System.Drawing.Point(357, 335);
+            this.cat_rb.Name = "cat_rb";
+            this.cat_rb.Size = new System.Drawing.Size(80, 17);
+            this.cat_rb.TabIndex = 20;
+            this.cat_rb.TabStop = true;
+            this.cat_rb.Text = "Категорию";
+            this.cat_rb.UseVisualStyleBackColor = true;
+            // 
+            // rule_rb
+            // 
+            this.rule_rb.AutoSize = true;
+            this.rule_rb.Location = new System.Drawing.Point(357, 358);
+            this.rule_rb.Name = "rule_rb";
+            this.rule_rb.Size = new System.Drawing.Size(69, 17);
+            this.rule_rb.TabIndex = 21;
+            this.rule_rb.TabStop = true;
+            this.rule_rb.Text = "Правило";
+            this.rule_rb.UseVisualStyleBackColor = true;
             // 
             // OpeningWin_ElementSelection
             // 
@@ -628,5 +656,7 @@
         private System.Windows.Forms.Button delete_bt;
         private System.Windows.Forms.Button add_bt;
         private System.Windows.Forms.GroupBox mainGroup;
+        private System.Windows.Forms.RadioButton rule_rb;
+        private System.Windows.Forms.RadioButton cat_rb;
     }
 }

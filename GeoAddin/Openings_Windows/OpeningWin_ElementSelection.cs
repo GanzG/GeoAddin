@@ -36,6 +36,7 @@ namespace GeoAddin.Openings_Windows
 
         public bool threadState = true;
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
+        public int ruleCount = 1;
         List<Element> elementsInView;
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
@@ -47,46 +48,96 @@ namespace GeoAddin.Openings_Windows
 
         private void OpeningWin_ElementSelection_Load(object sender, EventArgs e)
         {
-            System.Drawing.Image add, delete, dialog;
-            add = new Bitmap((System.Drawing.Image)Properties.Resources.add ,28,28);
-            delete = new Bitmap((System.Drawing.Image)Properties.Resources.delete, 28, 28);
-            dialog = new Bitmap((System.Drawing.Image)Properties.Resources.dialog, 16, 16);
-            
-            add_bt.BackgroundImage = add;
-            delete_bt.BackgroundImage = delete;
+            foreach (var ComBox in CatGroup.Controls.OfType<System.Windows.Forms.ComboBox>().Concat(ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())) 
+                ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; //я запрещаю вам ручной ввод
+
+            //************************************************************************************//
+            //System.Drawing.Image add, delete, dialog;
+            //add = new Bitmap((System.Drawing.Image)Properties.Resources.add, 28, 28);
+            //delete = new Bitmap((System.Drawing.Image)Properties.Resources.delete, 28, 28);
+            //dialog = new Bitmap((System.Drawing.Image)Properties.Resources.dialog, 16, 16);
+
+            //add_bt.BackgroundImage = add;
+            //delete_bt.BackgroundImage = delete;
+            //************************************************************************************//
 
             FilteredElementCollector docCollector = new FilteredElementCollector(doc, doc.ActiveView.Id);
             elementsInView = (List<Element>)docCollector.ToElements();
 
-            
+
 
             foreach (var element in elementsInView)
             {
-                for (int i = 2; i<=9; i++) 
+                for (int i = 2; i <= 9; i++)
                     try
                     {
                         if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("Все элементы") == false) (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Все элементы");
-                            if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false) 
-                            (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());   
+                        if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
+                            (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
                     }
                     catch
                     {
 
                     }
-                //System.Windows.Forms.MessageBox.Show(element.Category.Name.ToString());
             }
 
-            Task.Factory.StartNew(deformationControl);
+            //Task.Factory.StartNew(deformationControl);
 
         }
 
         public void deformationControl()
         {
-            while (threadState)
+            CatGroup.Height = 27 * (count - 1) + 46;
+            ParamGroup.Height = 110 + ruleCount*27;
+            System.Drawing.Point location;
+            if (CatGroup.Height > ParamGroup.Height) location = new System.Drawing.Point(CatGroup.Location.X, CatGroup.Location.Y + CatGroup.Height);
+            else location = new System.Drawing.Point(CatGroup.Location.X, ParamGroup.Location.Y + ParamGroup.Height);
+            mainGroup.Location = location;
+            this.Height = mainGroup.Location.Y + mainGroup.Height + 56;
+        }
+
+        private void addDelControl(string action, string obj)
+        {
+            var GrBox = new System.Windows.Forms.GroupBox();
+            if (obj == "cat") GrBox = CatGroup;
+            if (obj == "param") GrBox = CatGroup;
+
+            int i = count + 1;
+            string oldObj_name = obj + "_" + count + "_ComBox";
+            string obj_name = obj + "_" + i + "_ComBox";
+
+
+            System.Drawing.Point oldLoc = (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Location;
+
+            if (action == "add")
             {
-                //System.Windows.Forms.MessageBox.Show("");
-                //Thread.Sleep(500);
+                if (count <= 8 && (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Text != "" && (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Text != "Все элементы")
+                {
+                    count++;
+                    
+                    GrBox.Height = 27 * (count - 1) + 46;
+                    (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).Location = new System.Drawing.Point(oldLoc.X, oldLoc.Y + 27);
+
+                    //не забыть для параметров уточнить детали расширения
+
+                    deformationControl();
+                }
             }
+
+            if (action == "del")
+            {
+                if (count >= 3)
+                {
+                    System.Drawing.Point hidePoint = new System.Drawing.Point((GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).Location.X + 400, (CatGroup.Controls[obj_name] as System.Windows.Forms.ComboBox).Location.Y);
+                    (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).Text = "";
+                    (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).Location = hidePoint;
+                    count--;
+
+                    deformationControl();
+                }
+            }
+
+
         }
 
         private void close_bt_Click(object sender, EventArgs e)
@@ -97,29 +148,19 @@ namespace GeoAddin.Openings_Windows
 
         private void add_bt_Click(object sender, EventArgs e)
         {
-            //System.Windows.Forms.MessageBox.Show(Convert.ToString(count));
-            if (count <= 8 && (CatGroup.Controls["cat_" + count + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "" && (CatGroup.Controls["cat_" + count + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "Все элементы")
-            {
-                System.Drawing.Point oldLoc = (CatGroup.Controls["cat_" + count + "_ComBox"] as System.Windows.Forms.ComboBox).Location;
-                count++;
 
-                CatGroup.Height = 27 * (count - 1) + 46;
+            if (cat_rb.Checked) addDelControl("add", "cat");
+            if (rule_rb.Checked) addDelControl("add", "param");
 
-                string cb_name = "cat_" + count + "_ComBox";
-                (CatGroup.Controls[cb_name] as System.Windows.Forms.ComboBox).Location = new System.Drawing.Point(oldLoc.X, oldLoc.Y + 27);
-
-                if (mainGroup.Location.Y - (CatGroup.Location.Y + CatGroup.Height) <= 17)
-                {
-                    mainGroup.Location = new System.Drawing.Point(mainGroup.Location.X, mainGroup.Location.Y + (17 - (mainGroup.Location.Y - (CatGroup.Location.Y + CatGroup.Height))));
-                    this.Height = mainGroup.Location.Y + mainGroup.Height + 56;
-                }
-            }
         }
 
         private void delete_bt_Click(object sender, EventArgs e)
         {
-
+            if (cat_rb.Checked) addDelControl("del", "cat");
+            if (rule_rb.Checked) addDelControl("del", "param");
+            
         }
+
 
         private void result_bt_Click(object sender, EventArgs e)
         {
