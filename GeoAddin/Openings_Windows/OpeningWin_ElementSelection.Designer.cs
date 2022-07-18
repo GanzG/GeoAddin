@@ -413,6 +413,7 @@
             this.result_bt.TabIndex = 8;
             this.result_bt.Text = "Сформировать выборку";
             this.result_bt.UseVisualStyleBackColor = true;
+            this.result_bt.Click += new System.EventHandler(this.result_bt_Click);
             // 
             // addToResult_bt
             // 
