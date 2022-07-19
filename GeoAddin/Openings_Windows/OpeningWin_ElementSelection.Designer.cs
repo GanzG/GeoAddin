@@ -40,26 +40,26 @@
             this.cat_3_ComBox = new System.Windows.Forms.ComboBox();
             this.cat_2_ComBox = new System.Windows.Forms.ComboBox();
             this.ParamGroup = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.relLabel = new System.Windows.Forms.Label();
             this.relationship_ComBox = new System.Windows.Forms.ComboBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.rule_5_comBox = new System.Windows.Forms.ComboBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.rule_4_comBox = new System.Windows.Forms.ComboBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.rule_3_comBox = new System.Windows.Forms.ComboBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.rule_2_comBox = new System.Windows.Forms.ComboBox();
+            this.ruleValue_5_tb = new System.Windows.Forms.TextBox();
+            this.rule_5_ComBox = new System.Windows.Forms.ComboBox();
+            this.ruleValue_4_tb = new System.Windows.Forms.TextBox();
+            this.rule_4_ComBox = new System.Windows.Forms.ComboBox();
+            this.ruleValue_3_tb = new System.Windows.Forms.TextBox();
+            this.rule_3_ComBox = new System.Windows.Forms.ComboBox();
+            this.ruleValue_2_tb = new System.Windows.Forms.TextBox();
+            this.rule_2_ComBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.ruleValue_1_tb = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.rule_1_comBox = new System.Windows.Forms.ComboBox();
-            this.param_5_comBox = new System.Windows.Forms.ComboBox();
-            this.param_1_comBox = new System.Windows.Forms.ComboBox();
-            this.param_2_comBox = new System.Windows.Forms.ComboBox();
-            this.param_3_comBox = new System.Windows.Forms.ComboBox();
-            this.param_4_comBox = new System.Windows.Forms.ComboBox();
+            this.rule_1_ComBox = new System.Windows.Forms.ComboBox();
+            this.param_5_ComBox = new System.Windows.Forms.ComboBox();
+            this.param_1_ComBox = new System.Windows.Forms.ComboBox();
+            this.param_2_ComBox = new System.Windows.Forms.ComboBox();
+            this.param_3_ComBox = new System.Windows.Forms.ComboBox();
+            this.param_4_ComBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Результат = new System.Windows.Forms.Label();
@@ -185,41 +185,41 @@
             // 
             // ParamGroup
             // 
-            this.ParamGroup.Controls.Add(this.label6);
+            this.ParamGroup.Controls.Add(this.relLabel);
             this.ParamGroup.Controls.Add(this.relationship_ComBox);
-            this.ParamGroup.Controls.Add(this.textBox5);
+            this.ParamGroup.Controls.Add(this.ruleValue_5_tb);
             this.ParamGroup.Controls.Add(this.label5);
-            this.ParamGroup.Controls.Add(this.textBox1);
-            this.ParamGroup.Controls.Add(this.rule_5_comBox);
+            this.ParamGroup.Controls.Add(this.ruleValue_1_tb);
+            this.ParamGroup.Controls.Add(this.rule_5_ComBox);
             this.ParamGroup.Controls.Add(this.label4);
             this.ParamGroup.Controls.Add(this.label3);
-            this.ParamGroup.Controls.Add(this.textBox6);
-            this.ParamGroup.Controls.Add(this.rule_1_comBox);
-            this.ParamGroup.Controls.Add(this.param_1_comBox);
-            this.ParamGroup.Controls.Add(this.rule_4_comBox);
-            this.ParamGroup.Controls.Add(this.param_2_comBox);
-            this.ParamGroup.Controls.Add(this.rule_2_comBox);
-            this.ParamGroup.Controls.Add(this.textBox3);
-            this.ParamGroup.Controls.Add(this.param_5_comBox);
-            this.ParamGroup.Controls.Add(this.param_4_comBox);
-            this.ParamGroup.Controls.Add(this.textBox2);
-            this.ParamGroup.Controls.Add(this.rule_3_comBox);
-            this.ParamGroup.Controls.Add(this.param_3_comBox);
+            this.ParamGroup.Controls.Add(this.ruleValue_4_tb);
+            this.ParamGroup.Controls.Add(this.rule_1_ComBox);
+            this.ParamGroup.Controls.Add(this.param_1_ComBox);
+            this.ParamGroup.Controls.Add(this.rule_4_ComBox);
+            this.ParamGroup.Controls.Add(this.param_2_ComBox);
+            this.ParamGroup.Controls.Add(this.rule_2_ComBox);
+            this.ParamGroup.Controls.Add(this.ruleValue_3_tb);
+            this.ParamGroup.Controls.Add(this.param_5_ComBox);
+            this.ParamGroup.Controls.Add(this.param_4_ComBox);
+            this.ParamGroup.Controls.Add(this.ruleValue_2_tb);
+            this.ParamGroup.Controls.Add(this.rule_3_ComBox);
+            this.ParamGroup.Controls.Add(this.param_3_ComBox);
             this.ParamGroup.Location = new System.Drawing.Point(211, 41);
             this.ParamGroup.Name = "ParamGroup";
-            this.ParamGroup.Size = new System.Drawing.Size(396, 137);
+            this.ParamGroup.Size = new System.Drawing.Size(396, 133);
             this.ParamGroup.TabIndex = 4;
             this.ParamGroup.TabStop = false;
             // 
-            // label6
+            // relLabel
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(89, 101);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(204, 17);
-            this.label6.TabIndex = 47;
-            this.label6.Text = "Отношение между условиями";
+            this.relLabel.AutoSize = true;
+            this.relLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.relLabel.Location = new System.Drawing.Point(89, 101);
+            this.relLabel.Name = "relLabel";
+            this.relLabel.Size = new System.Drawing.Size(204, 17);
+            this.relLabel.TabIndex = 47;
+            this.relLabel.Text = "Отношение между условиями";
             // 
             // relationship_ComBox
             // 
@@ -229,65 +229,65 @@
             this.relationship_ComBox.Size = new System.Drawing.Size(88, 21);
             this.relationship_ComBox.TabIndex = 45;
             // 
-            // textBox5
+            // ruleValue_5_tb
             // 
-            this.textBox5.Location = new System.Drawing.Point(713, 130);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(90, 20);
-            this.textBox5.TabIndex = 44;
+            this.ruleValue_5_tb.Location = new System.Drawing.Point(713, 130);
+            this.ruleValue_5_tb.Name = "ruleValue_5_tb";
+            this.ruleValue_5_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_5_tb.TabIndex = 44;
             // 
-            // rule_5_comBox
+            // rule_5_ComBox
             // 
-            this.rule_5_comBox.FormattingEnabled = true;
-            this.rule_5_comBox.Location = new System.Drawing.Point(602, 129);
-            this.rule_5_comBox.Name = "rule_5_comBox";
-            this.rule_5_comBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_5_comBox.TabIndex = 43;
+            this.rule_5_ComBox.FormattingEnabled = true;
+            this.rule_5_ComBox.Location = new System.Drawing.Point(602, 129);
+            this.rule_5_ComBox.Name = "rule_5_ComBox";
+            this.rule_5_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_5_ComBox.TabIndex = 43;
             // 
-            // textBox6
+            // ruleValue_4_tb
             // 
-            this.textBox6.Location = new System.Drawing.Point(713, 94);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(90, 20);
-            this.textBox6.TabIndex = 42;
+            this.ruleValue_4_tb.Location = new System.Drawing.Point(713, 94);
+            this.ruleValue_4_tb.Name = "ruleValue_4_tb";
+            this.ruleValue_4_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_4_tb.TabIndex = 42;
             // 
-            // rule_4_comBox
+            // rule_4_ComBox
             // 
-            this.rule_4_comBox.FormattingEnabled = true;
-            this.rule_4_comBox.Location = new System.Drawing.Point(602, 93);
-            this.rule_4_comBox.Name = "rule_4_comBox";
-            this.rule_4_comBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_4_comBox.TabIndex = 41;
+            this.rule_4_ComBox.FormattingEnabled = true;
+            this.rule_4_ComBox.Location = new System.Drawing.Point(602, 93);
+            this.rule_4_ComBox.Name = "rule_4_ComBox";
+            this.rule_4_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_4_ComBox.TabIndex = 41;
             // 
-            // textBox3
+            // ruleValue_3_tb
             // 
-            this.textBox3.Location = new System.Drawing.Point(713, 59);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(90, 20);
-            this.textBox3.TabIndex = 40;
+            this.ruleValue_3_tb.Location = new System.Drawing.Point(713, 59);
+            this.ruleValue_3_tb.Name = "ruleValue_3_tb";
+            this.ruleValue_3_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_3_tb.TabIndex = 40;
             // 
-            // rule_3_comBox
+            // rule_3_ComBox
             // 
-            this.rule_3_comBox.FormattingEnabled = true;
-            this.rule_3_comBox.Location = new System.Drawing.Point(602, 58);
-            this.rule_3_comBox.Name = "rule_3_comBox";
-            this.rule_3_comBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_3_comBox.TabIndex = 39;
+            this.rule_3_ComBox.FormattingEnabled = true;
+            this.rule_3_ComBox.Location = new System.Drawing.Point(602, 58);
+            this.rule_3_ComBox.Name = "rule_3_ComBox";
+            this.rule_3_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_3_ComBox.TabIndex = 39;
             // 
-            // textBox2
+            // ruleValue_2_tb
             // 
-            this.textBox2.Location = new System.Drawing.Point(713, 21);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(90, 20);
-            this.textBox2.TabIndex = 38;
+            this.ruleValue_2_tb.Location = new System.Drawing.Point(713, 21);
+            this.ruleValue_2_tb.Name = "ruleValue_2_tb";
+            this.ruleValue_2_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_2_tb.TabIndex = 38;
             // 
-            // rule_2_comBox
+            // rule_2_ComBox
             // 
-            this.rule_2_comBox.FormattingEnabled = true;
-            this.rule_2_comBox.Location = new System.Drawing.Point(602, 20);
-            this.rule_2_comBox.Name = "rule_2_comBox";
-            this.rule_2_comBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_2_comBox.TabIndex = 37;
+            this.rule_2_ComBox.FormattingEnabled = true;
+            this.rule_2_ComBox.Location = new System.Drawing.Point(602, 20);
+            this.rule_2_ComBox.Name = "rule_2_ComBox";
+            this.rule_2_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_2_ComBox.TabIndex = 37;
             // 
             // label5
             // 
@@ -299,12 +299,12 @@
             this.label5.TabIndex = 36;
             this.label5.Text = "Значение";
             // 
-            // textBox1
+            // ruleValue_1_tb
             // 
-            this.textBox1.Location = new System.Drawing.Point(301, 49);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(90, 20);
-            this.textBox1.TabIndex = 35;
+            this.ruleValue_1_tb.Location = new System.Drawing.Point(301, 49);
+            this.ruleValue_1_tb.Name = "ruleValue_1_tb";
+            this.ruleValue_1_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_1_tb.TabIndex = 35;
             // 
             // label4
             // 
@@ -326,53 +326,53 @@
             this.label3.TabIndex = 7;
             this.label3.Text = "Параметр";
             // 
-            // rule_1_comBox
+            // rule_1_ComBox
             // 
-            this.rule_1_comBox.FormattingEnabled = true;
-            this.rule_1_comBox.Location = new System.Drawing.Point(190, 48);
-            this.rule_1_comBox.Name = "rule_1_comBox";
-            this.rule_1_comBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_1_comBox.TabIndex = 33;
+            this.rule_1_ComBox.FormattingEnabled = true;
+            this.rule_1_ComBox.Location = new System.Drawing.Point(190, 48);
+            this.rule_1_ComBox.Name = "rule_1_ComBox";
+            this.rule_1_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_1_ComBox.TabIndex = 33;
             // 
-            // param_5_comBox
+            // param_5_ComBox
             // 
-            this.param_5_comBox.FormattingEnabled = true;
-            this.param_5_comBox.Location = new System.Drawing.Point(430, 129);
-            this.param_5_comBox.Name = "param_5_comBox";
-            this.param_5_comBox.Size = new System.Drawing.Size(151, 21);
-            this.param_5_comBox.TabIndex = 27;
+            this.param_5_ComBox.FormattingEnabled = true;
+            this.param_5_ComBox.Location = new System.Drawing.Point(430, 129);
+            this.param_5_ComBox.Name = "param_5_ComBox";
+            this.param_5_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_5_ComBox.TabIndex = 27;
             // 
-            // param_1_comBox
+            // param_1_ComBox
             // 
-            this.param_1_comBox.FormattingEnabled = true;
-            this.param_1_comBox.Location = new System.Drawing.Point(18, 48);
-            this.param_1_comBox.Name = "param_1_comBox";
-            this.param_1_comBox.Size = new System.Drawing.Size(151, 21);
-            this.param_1_comBox.TabIndex = 19;
+            this.param_1_ComBox.FormattingEnabled = true;
+            this.param_1_ComBox.Location = new System.Drawing.Point(18, 48);
+            this.param_1_ComBox.Name = "param_1_ComBox";
+            this.param_1_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_1_ComBox.TabIndex = 19;
             // 
-            // param_2_comBox
+            // param_2_ComBox
             // 
-            this.param_2_comBox.FormattingEnabled = true;
-            this.param_2_comBox.Location = new System.Drawing.Point(430, 20);
-            this.param_2_comBox.Name = "param_2_comBox";
-            this.param_2_comBox.Size = new System.Drawing.Size(151, 21);
-            this.param_2_comBox.TabIndex = 20;
+            this.param_2_ComBox.FormattingEnabled = true;
+            this.param_2_ComBox.Location = new System.Drawing.Point(430, 20);
+            this.param_2_ComBox.Name = "param_2_ComBox";
+            this.param_2_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_2_ComBox.TabIndex = 20;
             // 
-            // param_3_comBox
+            // param_3_ComBox
             // 
-            this.param_3_comBox.FormattingEnabled = true;
-            this.param_3_comBox.Location = new System.Drawing.Point(430, 58);
-            this.param_3_comBox.Name = "param_3_comBox";
-            this.param_3_comBox.Size = new System.Drawing.Size(151, 21);
-            this.param_3_comBox.TabIndex = 21;
+            this.param_3_ComBox.FormattingEnabled = true;
+            this.param_3_ComBox.Location = new System.Drawing.Point(430, 58);
+            this.param_3_ComBox.Name = "param_3_ComBox";
+            this.param_3_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_3_ComBox.TabIndex = 21;
             // 
-            // param_4_comBox
+            // param_4_ComBox
             // 
-            this.param_4_comBox.FormattingEnabled = true;
-            this.param_4_comBox.Location = new System.Drawing.Point(430, 92);
-            this.param_4_comBox.Name = "param_4_comBox";
-            this.param_4_comBox.Size = new System.Drawing.Size(151, 21);
-            this.param_4_comBox.TabIndex = 22;
+            this.param_4_ComBox.FormattingEnabled = true;
+            this.param_4_ComBox.Location = new System.Drawing.Point(430, 92);
+            this.param_4_ComBox.Name = "param_4_ComBox";
+            this.param_4_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_4_ComBox.TabIndex = 22;
             // 
             // label1
             // 
@@ -585,7 +585,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(619, 609);
+            this.ClientSize = new System.Drawing.Size(620, 609);
             this.Controls.Add(this.mainGroup);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -622,26 +622,26 @@
         private System.Windows.Forms.ComboBox cat_4_ComBox;
         private System.Windows.Forms.ComboBox cat_3_ComBox;
         private System.Windows.Forms.ComboBox cat_2_ComBox;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label relLabel;
         private System.Windows.Forms.ComboBox relationship_ComBox;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.ComboBox rule_5_comBox;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.ComboBox rule_4_comBox;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.ComboBox rule_3_comBox;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.ComboBox rule_2_comBox;
+        private System.Windows.Forms.TextBox ruleValue_5_tb;
+        private System.Windows.Forms.ComboBox rule_5_ComBox;
+        private System.Windows.Forms.TextBox ruleValue_4_tb;
+        private System.Windows.Forms.ComboBox rule_4_ComBox;
+        private System.Windows.Forms.TextBox ruleValue_3_tb;
+        private System.Windows.Forms.ComboBox rule_3_ComBox;
+        private System.Windows.Forms.TextBox ruleValue_2_tb;
+        private System.Windows.Forms.ComboBox rule_2_ComBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox ruleValue_1_tb;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox rule_1_comBox;
-        private System.Windows.Forms.ComboBox param_5_comBox;
-        private System.Windows.Forms.ComboBox param_1_comBox;
-        private System.Windows.Forms.ComboBox param_2_comBox;
-        private System.Windows.Forms.ComboBox param_3_comBox;
-        private System.Windows.Forms.ComboBox param_4_comBox;
+        private System.Windows.Forms.ComboBox rule_1_ComBox;
+        private System.Windows.Forms.ComboBox param_5_ComBox;
+        private System.Windows.Forms.ComboBox param_1_ComBox;
+        private System.Windows.Forms.ComboBox param_2_ComBox;
+        private System.Windows.Forms.ComboBox param_3_ComBox;
+        private System.Windows.Forms.ComboBox param_4_ComBox;
         private System.Windows.Forms.Label Результат;
         private System.Windows.Forms.Button result_bt;
         private System.Windows.Forms.Button addToResult_bt;
