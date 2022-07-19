@@ -345,9 +345,9 @@
             // param_1_ComBox
             // 
             this.param_1_ComBox.FormattingEnabled = true;
-            this.param_1_ComBox.Location = new System.Drawing.Point(18, 48);
+            this.param_1_ComBox.Location = new System.Drawing.Point(6, 48);
             this.param_1_ComBox.Name = "param_1_ComBox";
-            this.param_1_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_1_ComBox.Size = new System.Drawing.Size(163, 21);
             this.param_1_ComBox.TabIndex = 19;
             // 
             // param_2_ComBox

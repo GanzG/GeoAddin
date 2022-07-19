@@ -51,19 +51,52 @@ namespace GeoAddin.Openings_Windows
             foreach (var ComBox in CatGroup.Controls.OfType<System.Windows.Forms.ComboBox>().Concat(ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())) 
                 ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; //я запрещаю вам ручной ввод
 
-            FilteredElementCollector docCollector = new FilteredElementCollector(doc, doc.ActiveView.Id);
+            FilteredElementCollector docCollector = new FilteredElementCollector(doc);
             elementsInView = (List<Element>)docCollector.ToElements();
 
 
 
             foreach (var element in elementsInView)
             {
-                for (int i = 2; i <= 9; i++)
+                for (int i = 1; i <= 9; i++)
                     try
                     {
-                        if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("Все элементы") == false) (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Все элементы");
-                        if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
-                            (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
+                        if (i >= 2)
+                        {
+                            if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("Все элементы") == false) (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Все элементы");
+                            if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
+                                (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
+                        }
+                            
+                    
+                        if (i <=5)
+                        {
+                            //(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.GetParameters());
+
+                            //foreach (Parameter param in element.GetType())
+                            //{
+                            //switch (param.StorageType)
+                            //{
+                            //    case StorageType.Double:
+
+                            //        break;
+                            //    default:
+
+                            //        break;
+                            //}
+
+                            IList<Parameter> param = element.GetOrderedParameters();
+                            foreach (Parameter p in param)
+                            {
+                                if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(p.Definition.Name) == false) (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(p.Definition.Name);
+                            }
+                            //for (int j = 0; j < param.Count; j++) 
+
+
+
+                            //}
+
+                        }
                     }
                     catch
                     {
@@ -72,10 +105,10 @@ namespace GeoAddin.Openings_Windows
             }
 
             //временный блок//
-            for (int i = 1; i <= 5; i++)
-            {
-                (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(i);
-            }
+            //for (int i = 1; i <= 5; i++)
+            //{
+            //    (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(i);
+            //}
             //конец временного блока//
 
         }
