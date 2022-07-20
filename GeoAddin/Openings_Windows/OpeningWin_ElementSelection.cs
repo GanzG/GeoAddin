@@ -55,8 +55,6 @@ namespace GeoAddin.Openings_Windows
 
             FilteredElementCollector docCollector = new FilteredElementCollector(doc)
                 .WhereElementIsNotElementType(); //на данном этапе интересуют только экземпляры
-            //FilteredElementCollector docCollectorElementTypes = new FilteredElementCollector(doc).WhereElementIsElementType(); 
-            //elementTypes = (List<Element>)docCollectorElementTypes.ToElements();
             elementsInView = (List<Element>)docCollector.ToElements();
             
 
@@ -69,28 +67,13 @@ namespace GeoAddin.Openings_Windows
             {
                     try
                     {
-                    //element.
-                    if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("-Все элементы-") == false) (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("-Все элементы-");
-                    if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false && element.Category.CategoryType.ToString() == "Model")
-                    {
-                        (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
-                        
-                        parameter = (List<Parameter>)element.GetOrderedParameters();
-
+                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("-Все элементы-") == false) (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("-Все элементы-");
+                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false && element.Category.CategoryType.ToString() == "Model")
+                        {
+                            (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
+                            //parameter = (List<Parameter>)element.GetOrderedParameters();
+                        }
                     }
-
-
-                    // не потерять этот кусок
-                    //    IList<Parameter> param = element.GetOrderedParameters();
-
-                    //parameter = (List<Parameter>)element.GetOrderedParameters();
-                    //foreach (Parameter p in parameter)
-                    //{
-                    //    if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(p.Definition.Name) == false) (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(p.Definition.Name);
-                    //}
-
-
-                }
                     catch
                     {
 
@@ -156,7 +139,9 @@ namespace GeoAddin.Openings_Windows
 
                     (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).Location = new System.Drawing.Point(oldLoc.X, oldLoc.Y + 27);
 
-                    (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).DataSource = ((GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Items);  //Добавляемому контролу должен передаваться список
+                    var datasourceBuf = (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Items.Cast<Object>().Select(item => item.ToString()).ToList(); //буферный лист для коллекции
+                    datasourceBuf.Remove((GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Text); //из-за datasource combox не даст удалить элемент коллекции, поэтому удаляем его в буферном листе
+                    (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).DataSource = datasourceBuf; //Добавляемому контролу должен передаваться список
                     (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).SelectedItem = null; //чтобы появлялся без выбранной категории
 
                     //индивидуальные элементы paramgroup//
@@ -192,8 +177,6 @@ namespace GeoAddin.Openings_Windows
                     deformationControl();
                 }
             }
-
-
         }
 
         private void close_bt_Click(object sender, EventArgs e)
@@ -204,24 +187,20 @@ namespace GeoAddin.Openings_Windows
 
         private void add_bt_Click(object sender, EventArgs e)
         {
-
             if (cat_rb.Checked) addDelControl("add", "cat");
             if (rule_rb.Checked) addDelControl("add", "param");
-
         }
 
         private void delete_bt_Click(object sender, EventArgs e)
         {
             if (cat_rb.Checked) addDelControl("del", "cat");
             if (rule_rb.Checked) addDelControl("del", "param");
-            
         }
 
         private void selectControl(object sender, EventArgs e)
         {
             System.Windows.Forms.ComboBox combox = sender as System.Windows.Forms.ComboBox;
-
-                
+    
             string name = combox.Text;
             (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Clear();
             Element elementType = null; 
@@ -237,9 +216,9 @@ namespace GeoAddin.Openings_Windows
                         elementInstance = element;
 
                         parameter = elementInstance.GetOrderedParameters().Concat(elementType.GetOrderedParameters()).ToList();
-                        //MessageBox.Show("Гет ордер параметерс");
+
                         foreach (Parameter param in parameter)
-                            if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(param.Definition.Name) == false)
+                            if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(param.Definition.Name) == false && param.Definition.Name[0].ToString() != "-")
                                 (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(param.Definition.Name);
                         (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true;
                         break;
@@ -250,14 +229,6 @@ namespace GeoAddin.Openings_Windows
                 {
                 }
             }
-
-                
-            
-                
-
-
-
-
         }
 
 
