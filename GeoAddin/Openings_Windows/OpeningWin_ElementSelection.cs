@@ -38,6 +38,7 @@ namespace GeoAddin.Openings_Windows
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public int ruleCount = 1;
         List<Element> elementsInView;
+        //public Element element;
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
             InitializeComponent();
@@ -51,52 +52,32 @@ namespace GeoAddin.Openings_Windows
             foreach (var ComBox in CatGroup.Controls.OfType<System.Windows.Forms.ComboBox>().Concat(ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())) 
                 ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; //я запрещаю вам ручной ввод
 
-            FilteredElementCollector docCollector = new FilteredElementCollector(doc);
+            FilteredElementCollector docCollector = new FilteredElementCollector(doc).WhereElementIsNotElementType();
             elementsInView = (List<Element>)docCollector.ToElements();
+            
 
 
+            //прикручиваю обработчик событий для всех комбобоксов из catgroup//
+            for (int i = 2; i<=8; i++) (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).TextChanged += new System.EventHandler(selectControl);
+            //**************************************************************//
 
             foreach (var element in elementsInView)
             {
-                for (int i = 1; i <= 9; i++)
                     try
                     {
-                        if (i >= 2)
-                        {
-                            if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("Все элементы") == false) (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Все элементы");
-                            if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
-                                (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
-                        }
-                            
-                    
-                        if (i <=5)
-                        {
-                            //(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.GetParameters());
 
-                            //foreach (Parameter param in element.GetType())
-                            //{
-                            //switch (param.StorageType)
-                            //{
-                            //    case StorageType.Double:
+                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("-Все элементы-") == false) (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("-Все элементы-");
+                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
+                        (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
 
-                            //        break;
-                            //    default:
-
-                            //        break;
-                            //}
-
-                            IList<Parameter> param = element.GetOrderedParameters();
-                            foreach (Parameter p in param)
-                            {
-                                if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(p.Definition.Name) == false) (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(p.Definition.Name);
-                            }
-                            //for (int j = 0; j < param.Count; j++) 
+                        // не потерять этот кусок
+                        //    IList<Parameter> param = element.GetOrderedParameters();
+                        //    foreach (Parameter p in param)
+                        //    {
+                        //        if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(p.Definition.Name) == false) (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(p.Definition.Name);
+                        //    }
 
 
-
-                            //}
-
-                        }
                     }
                     catch
                     {
@@ -104,14 +85,10 @@ namespace GeoAddin.Openings_Windows
                     }
             }
 
-            //временный блок//
-            //for (int i = 1; i <= 5; i++)
-            //{
-            //    (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(i);
-            //}
-            //конец временного блока//
-
+            (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true; //сортирую по алфавиту
         }
+
+
 
         public void deformationControl()
         {
@@ -160,12 +137,15 @@ namespace GeoAddin.Openings_Windows
 
             if (action == "add")
             {
-                if (((obj == "cat" && count <= 8) || (obj == "param" && ruleCount <=4)) && (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Text != "" && (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Text != "Все элементы")
+                if (((obj == "cat" && count <= 8) || (obj == "param" && ruleCount <=4)) && (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Text != "" && (GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Text != "-Все элементы-")
                 {
                     if (obj == "cat") count++;
                     if (obj == "param") ruleCount++;
 
                     (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).Location = new System.Drawing.Point(oldLoc.X, oldLoc.Y + 27);
+
+                    (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).DataSource = ((GrBox.Controls[oldObj_name] as System.Windows.Forms.ComboBox).Items);  //Добавляемому контролу должен передаваться список
+                    (GrBox.Controls[obj_name] as System.Windows.Forms.ComboBox).SelectedItem = null; //чтобы появлялся без выбранной категории
 
                     //индивидуальные элементы paramgroup//
                     if (obj == "param")
@@ -223,6 +203,13 @@ namespace GeoAddin.Openings_Windows
             if (cat_rb.Checked) addDelControl("del", "cat");
             if (rule_rb.Checked) addDelControl("del", "param");
             
+        }
+
+        private void selectControl(object sender, EventArgs e)
+        {
+            System.Windows.Forms.ComboBox combox = sender as System.Windows.Forms.ComboBox;
+
+            //elementsInView.FindAll();
         }
 
 

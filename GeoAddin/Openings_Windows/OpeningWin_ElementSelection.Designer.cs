@@ -595,6 +595,7 @@
             this.Name = "OpeningWin_ElementSelection";
             this.Text = "Селектор элементов";
             this.Load += new System.EventHandler(this.OpeningWin_ElementSelection_Load);
+            this.TextChanged += new System.EventHandler(this.selectControl);
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).EndInit();
             this.CatGroup.ResumeLayout(false);
             this.ParamGroup.ResumeLayout(false);
