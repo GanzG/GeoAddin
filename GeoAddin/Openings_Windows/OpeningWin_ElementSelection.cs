@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows;
+//using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -38,7 +38,8 @@ namespace GeoAddin.Openings_Windows
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public int ruleCount = 1;
         List<Element> elementsInView;
-        //public Element element;
+        List<Parameter> parameter;
+
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
             InitializeComponent();
@@ -49,10 +50,13 @@ namespace GeoAddin.Openings_Windows
 
         private void OpeningWin_ElementSelection_Load(object sender, EventArgs e)
         {
-            foreach (var ComBox in CatGroup.Controls.OfType<System.Windows.Forms.ComboBox>().Concat(ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())) 
+            foreach (var ComBox in CatGroup.Controls.OfType<System.Windows.Forms.ComboBox>().Concat(ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())) //объединяю элементы двух групп, т.к. действие для всех одно
                 ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; //я запрещаю вам ручной ввод
 
-            FilteredElementCollector docCollector = new FilteredElementCollector(doc).WhereElementIsNotElementType();
+            FilteredElementCollector docCollector = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType(); //на данном этапе интересуют только экземпляры
+            //FilteredElementCollector docCollectorElementTypes = new FilteredElementCollector(doc).WhereElementIsElementType(); 
+            //elementTypes = (List<Element>)docCollectorElementTypes.ToElements();
             elementsInView = (List<Element>)docCollector.ToElements();
             
 
@@ -65,20 +69,28 @@ namespace GeoAddin.Openings_Windows
             {
                     try
                     {
-
-                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("-Все элементы-") == false) (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("-Все элементы-");
-                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
+                    //element.
+                    if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("-Все элементы-") == false) (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("-Все элементы-");
+                    if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false && element.Category.CategoryType.ToString() == "Model")
+                    {
                         (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
-
-                        // не потерять этот кусок
-                        //    IList<Parameter> param = element.GetOrderedParameters();
-                        //    foreach (Parameter p in param)
-                        //    {
-                        //        if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(p.Definition.Name) == false) (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(p.Definition.Name);
-                        //    }
-
+                        
+                        parameter = (List<Parameter>)element.GetOrderedParameters();
 
                     }
+
+
+                    // не потерять этот кусок
+                    //    IList<Parameter> param = element.GetOrderedParameters();
+
+                    //parameter = (List<Parameter>)element.GetOrderedParameters();
+                    //foreach (Parameter p in parameter)
+                    //{
+                    //    if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(p.Definition.Name) == false) (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(p.Definition.Name);
+                    //}
+
+
+                }
                     catch
                     {
 
@@ -209,7 +221,43 @@ namespace GeoAddin.Openings_Windows
         {
             System.Windows.Forms.ComboBox combox = sender as System.Windows.Forms.ComboBox;
 
-            //elementsInView.FindAll();
+                
+            string name = combox.Text;
+            (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Clear();
+            Element elementType = null; 
+            Element elementInstance = null;
+
+            foreach (var element in elementsInView)
+            {
+                try
+                {
+                    if (element.Category.Name.ToString() == name)
+                    {
+                        elementType = doc.GetElement(element.GetTypeId());
+                        elementInstance = element;
+
+                        parameter = elementInstance.GetOrderedParameters().Concat(elementType.GetOrderedParameters()).ToList();
+                        //MessageBox.Show("Гет ордер параметерс");
+                        foreach (Parameter param in parameter)
+                            if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(param.Definition.Name) == false)
+                                (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(param.Definition.Name);
+                        (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true;
+                        break;
+                    }
+                    
+                }
+                catch
+                {
+                }
+            }
+
+                
+            
+                
+
+
+
+
         }
 
 
