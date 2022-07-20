@@ -53,9 +53,12 @@ namespace GeoAddin.Openings_Windows
             foreach (var ComBox in CatGroup.Controls.OfType<System.Windows.Forms.ComboBox>().Concat(ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())) //объединяю элементы двух групп, т.к. действие для всех одно
                 ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; //я запрещаю вам ручной ввод
 
-            FilteredElementCollector docCollector = new FilteredElementCollector(doc)
-                .WhereElementIsNotElementType(); //на данном этапе интересуют только экземпляры
-            elementsInView = (List<Element>)docCollector.ToElements();
+            List<Element> elementsInView = new FilteredElementCollector(doc)
+                .WhereElementIsNotElementType()
+                .Where(el => el.LevelId.ToString() != "-1") //на данном этапе интересуют только экземпляры
+                .Where(el => el.Category.CategoryType.ToString() == "Model")
+                .ToList();
+            //elementsInView = (List<Element>)docCollector.ToElements();
             
 
 
@@ -68,7 +71,7 @@ namespace GeoAddin.Openings_Windows
                     try
                     {
                         if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("-Все элементы-") == false) (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("-Все элементы-");
-                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false && element.Category.CategoryType.ToString() == "Model")
+                        if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
                         {
                             (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
                             //parameter = (List<Parameter>)element.GetOrderedParameters();
