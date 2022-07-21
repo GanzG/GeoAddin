@@ -53,7 +53,7 @@ namespace GeoAddin.Openings_Windows
             foreach (var ComBox in CatGroup.Controls.OfType<System.Windows.Forms.ComboBox>().Concat(ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())) //объединяю элементы двух групп, т.к. действие для всех одно
                 ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; //я запрещаю вам ручной ввод
 
-            List<Element> elementsInView = new FilteredElementCollector(doc)
+            elementsInView = new FilteredElementCollector(doc)
                 .WhereElementIsNotElementType()
                 .Where(el => el.LevelId.ToString() != "-1") //на данном этапе интересуют только экземпляры
                 .Where(el => el.Category.CategoryType.ToString() == "Model")
