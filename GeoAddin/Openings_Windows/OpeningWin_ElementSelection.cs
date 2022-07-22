@@ -234,18 +234,19 @@ namespace GeoAddin.Openings_Windows
             //    }
             //}
 
+            //MessageBox.Show("Обработчик события");
             generalParameters(); //суть войда в том, чтобы обновить и составить актуальный список общих параметров
 
-            try
-            {
-                foreach (Parameter param in parameter)
-                    if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(param.Definition.Name) == false && param.Definition.Name[0].ToString() != "-")
-                        (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(param.Definition.Name);
-                (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true;
-            }
-            catch
-            {
-            }
+            //try
+            //{
+            //    foreach (Parameter param in parameter)
+            //        if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(param.Definition.Name) == false && param.Definition.Name[0].ToString() != "-")
+            //            (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(param.Definition.Name);
+            //    (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true;
+            //}
+            //catch
+            //{
+            //}
 
         }
 
@@ -260,11 +261,30 @@ namespace GeoAddin.Openings_Windows
             return el;
         }
 
+        static List<string> getParamNames(List<Parameter> recievedParam) //задуматься над тем, чтобы здесь же составлять результирующий лист с выборкой общих параметров
+        {
+            List<string> nameList = new List<string>();
+
+            foreach (Parameter param in recievedParam)
+            {
+                try //не у всех параметров есть безопасно возвращаемое "имя"
+                {
+                    nameList.Add(param.Definition.Name);
+                }
+                catch
+                {
+                }
+                
+            }
+            MessageBox.Show(nameList.Count.ToString());
+            return nameList;
+        }
+
         private void generalParameters()
         {
-            parameter = null;
-            //Element elementType = null;
-            //Element elementInstance = null;
+            parameter = null; //возможно, перенести все действия с этим листом в getParamNames
+
+            List<string> nameList = null; //свожу задачу к более простой выборке, чтобы не делать компаратор для класса Parameter
 
             Element element = null;
 
@@ -272,24 +292,36 @@ namespace GeoAddin.Openings_Windows
             {
                 if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "") //пропускаем пустые ComBox
                 {
+                    nameList = new List<string>();
                     element = findElement((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text); //получаем нужный элемент по названию 
                     //считаю название доверительным параметром, т.к. в Load-блоке названия формируются из параметров этих же элементов, а внешнее редактирование запрещено
+                    //MessageBox.Show("Внутри цикла - после пропуска пустого ComBox");
 
-                    if (parameter == null) parameter = element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList(); //происходит, когда идет первая итерация - параметров еще нет, поэтому надо задать первоначальные
-                    else
+                    if (nameList == null)
                     {
-                        var buf_1 = parameter;
-                        var buf_2 = element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList();
-
-                        //parameter = buf_1.Intersect(buf_2, new ParamNameComparer());
-                    } 
+                        //nameList = getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList()); //происходит, когда идет первая итерация - параметров еще нет, поэтому надо задать первоначальные
                         
-                        //parameter = parameter.Intersect(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList()).ToList(); //нахожу пересечение формально двух листов с параметрами (де-факто трех, т.к. сюда же подгружаю параметры elementType)
-                    MessageBox.Show(parameter.Count.ToString());
+                        MessageBox.Show(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList()).Count.ToString());
+                    }
+                    
+                    else nameList = nameList.Intersect(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList())).ToList();
+                  
+
+                    
                 }
-                
-                
+
+                if (nameList != null) MessageBox.Show(nameList.Count.ToString());
             }
+
+
+            //foreach (var name in nameList)
+            //{
+            //    if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(name) == false && name[0].ToString() != "-")
+            //        (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(name);
+            //    (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true;
+            //}
+
+
         }
 
 

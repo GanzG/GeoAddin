@@ -99,7 +99,6 @@
     <Compile Include="Openings_Windows\OpeningWin_ElementSelection.Designer.cs">
       <DependentUpon>OpeningWin_ElementSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="ParamNameComparer.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
