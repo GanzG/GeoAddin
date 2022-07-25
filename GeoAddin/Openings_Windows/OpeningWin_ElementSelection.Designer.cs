@@ -32,34 +32,34 @@
             this.result_DGV = new System.Windows.Forms.DataGridView();
             this.CatGroup = new System.Windows.Forms.GroupBox();
             this.cat_9_ComBox = new System.Windows.Forms.ComboBox();
+            this.cat_2_ComBox = new System.Windows.Forms.ComboBox();
+            this.cat_3_ComBox = new System.Windows.Forms.ComboBox();
             this.cat_8_ComBox = new System.Windows.Forms.ComboBox();
+            this.cat_4_ComBox = new System.Windows.Forms.ComboBox();
+            this.cat_5_ComBox = new System.Windows.Forms.ComboBox();
             this.cat_7_ComBox = new System.Windows.Forms.ComboBox();
             this.cat_6_ComBox = new System.Windows.Forms.ComboBox();
-            this.cat_5_ComBox = new System.Windows.Forms.ComboBox();
-            this.cat_4_ComBox = new System.Windows.Forms.ComboBox();
-            this.cat_3_ComBox = new System.Windows.Forms.ComboBox();
-            this.cat_2_ComBox = new System.Windows.Forms.ComboBox();
             this.ParamGroup = new System.Windows.Forms.GroupBox();
             this.relLabel = new System.Windows.Forms.Label();
             this.relationship_ComBox = new System.Windows.Forms.ComboBox();
             this.ruleValue_5_tb = new System.Windows.Forms.TextBox();
-            this.rule_5_ComBox = new System.Windows.Forms.ComboBox();
-            this.ruleValue_4_tb = new System.Windows.Forms.TextBox();
-            this.rule_4_ComBox = new System.Windows.Forms.ComboBox();
-            this.ruleValue_3_tb = new System.Windows.Forms.TextBox();
-            this.rule_3_ComBox = new System.Windows.Forms.ComboBox();
-            this.ruleValue_2_tb = new System.Windows.Forms.TextBox();
-            this.rule_2_ComBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.ruleValue_1_tb = new System.Windows.Forms.TextBox();
+            this.rule_5_ComBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.ruleValue_4_tb = new System.Windows.Forms.TextBox();
             this.rule_1_ComBox = new System.Windows.Forms.ComboBox();
-            this.param_5_ComBox = new System.Windows.Forms.ComboBox();
             this.param_1_ComBox = new System.Windows.Forms.ComboBox();
+            this.rule_4_ComBox = new System.Windows.Forms.ComboBox();
             this.param_2_ComBox = new System.Windows.Forms.ComboBox();
-            this.param_3_ComBox = new System.Windows.Forms.ComboBox();
+            this.rule_2_ComBox = new System.Windows.Forms.ComboBox();
+            this.ruleValue_3_tb = new System.Windows.Forms.TextBox();
+            this.param_5_ComBox = new System.Windows.Forms.ComboBox();
             this.param_4_ComBox = new System.Windows.Forms.ComboBox();
+            this.ruleValue_2_tb = new System.Windows.Forms.TextBox();
+            this.rule_3_ComBox = new System.Windows.Forms.ComboBox();
+            this.param_3_ComBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.Результат = new System.Windows.Forms.Label();
@@ -76,8 +76,8 @@
             this.delete_bt = new System.Windows.Forms.Button();
             this.add_bt = new System.Windows.Forms.Button();
             this.mainGroup = new System.Windows.Forms.GroupBox();
-            this.cat_rb = new System.Windows.Forms.RadioButton();
             this.rule_rb = new System.Windows.Forms.RadioButton();
+            this.cat_rb = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
@@ -97,9 +97,13 @@
             // 
             // result_DGV
             // 
+            this.result_DGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.result_DGV.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.result_DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.result_DGV.Location = new System.Drawing.Point(10, 48);
             this.result_DGV.Name = "result_DGV";
+            this.result_DGV.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.result_DGV.RowHeadersVisible = false;
             this.result_DGV.Size = new System.Drawing.Size(585, 165);
             this.result_DGV.TabIndex = 1;
             // 
@@ -127,6 +131,22 @@
             this.cat_9_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_9_ComBox.TabIndex = 10;
             // 
+            // cat_2_ComBox
+            // 
+            this.cat_2_ComBox.FormattingEnabled = true;
+            this.cat_2_ComBox.Location = new System.Drawing.Point(6, 46);
+            this.cat_2_ComBox.Name = "cat_2_ComBox";
+            this.cat_2_ComBox.Size = new System.Drawing.Size(157, 21);
+            this.cat_2_ComBox.TabIndex = 3;
+            // 
+            // cat_3_ComBox
+            // 
+            this.cat_3_ComBox.FormattingEnabled = true;
+            this.cat_3_ComBox.Location = new System.Drawing.Point(195, 46);
+            this.cat_3_ComBox.Name = "cat_3_ComBox";
+            this.cat_3_ComBox.Size = new System.Drawing.Size(157, 21);
+            this.cat_3_ComBox.TabIndex = 4;
+            // 
             // cat_8_ComBox
             // 
             this.cat_8_ComBox.FormattingEnabled = true;
@@ -134,6 +154,22 @@
             this.cat_8_ComBox.Name = "cat_8_ComBox";
             this.cat_8_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_8_ComBox.TabIndex = 9;
+            // 
+            // cat_4_ComBox
+            // 
+            this.cat_4_ComBox.FormattingEnabled = true;
+            this.cat_4_ComBox.Location = new System.Drawing.Point(195, 73);
+            this.cat_4_ComBox.Name = "cat_4_ComBox";
+            this.cat_4_ComBox.Size = new System.Drawing.Size(157, 21);
+            this.cat_4_ComBox.TabIndex = 5;
+            // 
+            // cat_5_ComBox
+            // 
+            this.cat_5_ComBox.FormattingEnabled = true;
+            this.cat_5_ComBox.Location = new System.Drawing.Point(195, 100);
+            this.cat_5_ComBox.Name = "cat_5_ComBox";
+            this.cat_5_ComBox.Size = new System.Drawing.Size(157, 21);
+            this.cat_5_ComBox.TabIndex = 6;
             // 
             // cat_7_ComBox
             // 
@@ -150,38 +186,6 @@
             this.cat_6_ComBox.Name = "cat_6_ComBox";
             this.cat_6_ComBox.Size = new System.Drawing.Size(157, 21);
             this.cat_6_ComBox.TabIndex = 7;
-            // 
-            // cat_5_ComBox
-            // 
-            this.cat_5_ComBox.FormattingEnabled = true;
-            this.cat_5_ComBox.Location = new System.Drawing.Point(195, 100);
-            this.cat_5_ComBox.Name = "cat_5_ComBox";
-            this.cat_5_ComBox.Size = new System.Drawing.Size(157, 21);
-            this.cat_5_ComBox.TabIndex = 6;
-            // 
-            // cat_4_ComBox
-            // 
-            this.cat_4_ComBox.FormattingEnabled = true;
-            this.cat_4_ComBox.Location = new System.Drawing.Point(195, 73);
-            this.cat_4_ComBox.Name = "cat_4_ComBox";
-            this.cat_4_ComBox.Size = new System.Drawing.Size(157, 21);
-            this.cat_4_ComBox.TabIndex = 5;
-            // 
-            // cat_3_ComBox
-            // 
-            this.cat_3_ComBox.FormattingEnabled = true;
-            this.cat_3_ComBox.Location = new System.Drawing.Point(195, 46);
-            this.cat_3_ComBox.Name = "cat_3_ComBox";
-            this.cat_3_ComBox.Size = new System.Drawing.Size(157, 21);
-            this.cat_3_ComBox.TabIndex = 4;
-            // 
-            // cat_2_ComBox
-            // 
-            this.cat_2_ComBox.FormattingEnabled = true;
-            this.cat_2_ComBox.Location = new System.Drawing.Point(6, 46);
-            this.cat_2_ComBox.Name = "cat_2_ComBox";
-            this.cat_2_ComBox.Size = new System.Drawing.Size(157, 21);
-            this.cat_2_ComBox.TabIndex = 3;
             // 
             // ParamGroup
             // 
@@ -236,59 +240,6 @@
             this.ruleValue_5_tb.Size = new System.Drawing.Size(90, 20);
             this.ruleValue_5_tb.TabIndex = 44;
             // 
-            // rule_5_ComBox
-            // 
-            this.rule_5_ComBox.FormattingEnabled = true;
-            this.rule_5_ComBox.Location = new System.Drawing.Point(602, 129);
-            this.rule_5_ComBox.Name = "rule_5_ComBox";
-            this.rule_5_ComBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_5_ComBox.TabIndex = 43;
-            // 
-            // ruleValue_4_tb
-            // 
-            this.ruleValue_4_tb.Location = new System.Drawing.Point(713, 94);
-            this.ruleValue_4_tb.Name = "ruleValue_4_tb";
-            this.ruleValue_4_tb.Size = new System.Drawing.Size(90, 20);
-            this.ruleValue_4_tb.TabIndex = 42;
-            // 
-            // rule_4_ComBox
-            // 
-            this.rule_4_ComBox.FormattingEnabled = true;
-            this.rule_4_ComBox.Location = new System.Drawing.Point(602, 93);
-            this.rule_4_ComBox.Name = "rule_4_ComBox";
-            this.rule_4_ComBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_4_ComBox.TabIndex = 41;
-            // 
-            // ruleValue_3_tb
-            // 
-            this.ruleValue_3_tb.Location = new System.Drawing.Point(713, 59);
-            this.ruleValue_3_tb.Name = "ruleValue_3_tb";
-            this.ruleValue_3_tb.Size = new System.Drawing.Size(90, 20);
-            this.ruleValue_3_tb.TabIndex = 40;
-            // 
-            // rule_3_ComBox
-            // 
-            this.rule_3_ComBox.FormattingEnabled = true;
-            this.rule_3_ComBox.Location = new System.Drawing.Point(602, 58);
-            this.rule_3_ComBox.Name = "rule_3_ComBox";
-            this.rule_3_ComBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_3_ComBox.TabIndex = 39;
-            // 
-            // ruleValue_2_tb
-            // 
-            this.ruleValue_2_tb.Location = new System.Drawing.Point(713, 21);
-            this.ruleValue_2_tb.Name = "ruleValue_2_tb";
-            this.ruleValue_2_tb.Size = new System.Drawing.Size(90, 20);
-            this.ruleValue_2_tb.TabIndex = 38;
-            // 
-            // rule_2_ComBox
-            // 
-            this.rule_2_ComBox.FormattingEnabled = true;
-            this.rule_2_ComBox.Location = new System.Drawing.Point(602, 20);
-            this.rule_2_ComBox.Name = "rule_2_ComBox";
-            this.rule_2_ComBox.Size = new System.Drawing.Size(90, 21);
-            this.rule_2_ComBox.TabIndex = 37;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -305,6 +256,14 @@
             this.ruleValue_1_tb.Name = "ruleValue_1_tb";
             this.ruleValue_1_tb.Size = new System.Drawing.Size(90, 20);
             this.ruleValue_1_tb.TabIndex = 35;
+            // 
+            // rule_5_ComBox
+            // 
+            this.rule_5_ComBox.FormattingEnabled = true;
+            this.rule_5_ComBox.Location = new System.Drawing.Point(602, 129);
+            this.rule_5_ComBox.Name = "rule_5_ComBox";
+            this.rule_5_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_5_ComBox.TabIndex = 43;
             // 
             // label4
             // 
@@ -326,6 +285,13 @@
             this.label3.TabIndex = 7;
             this.label3.Text = "Параметр";
             // 
+            // ruleValue_4_tb
+            // 
+            this.ruleValue_4_tb.Location = new System.Drawing.Point(713, 94);
+            this.ruleValue_4_tb.Name = "ruleValue_4_tb";
+            this.ruleValue_4_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_4_tb.TabIndex = 42;
+            // 
             // rule_1_ComBox
             // 
             this.rule_1_ComBox.FormattingEnabled = true;
@@ -333,14 +299,6 @@
             this.rule_1_ComBox.Name = "rule_1_ComBox";
             this.rule_1_ComBox.Size = new System.Drawing.Size(90, 21);
             this.rule_1_ComBox.TabIndex = 33;
-            // 
-            // param_5_ComBox
-            // 
-            this.param_5_ComBox.FormattingEnabled = true;
-            this.param_5_ComBox.Location = new System.Drawing.Point(430, 129);
-            this.param_5_ComBox.Name = "param_5_ComBox";
-            this.param_5_ComBox.Size = new System.Drawing.Size(151, 21);
-            this.param_5_ComBox.TabIndex = 27;
             // 
             // param_1_ComBox
             // 
@@ -350,6 +308,14 @@
             this.param_1_ComBox.Size = new System.Drawing.Size(163, 21);
             this.param_1_ComBox.TabIndex = 19;
             // 
+            // rule_4_ComBox
+            // 
+            this.rule_4_ComBox.FormattingEnabled = true;
+            this.rule_4_ComBox.Location = new System.Drawing.Point(602, 93);
+            this.rule_4_ComBox.Name = "rule_4_ComBox";
+            this.rule_4_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_4_ComBox.TabIndex = 41;
+            // 
             // param_2_ComBox
             // 
             this.param_2_ComBox.FormattingEnabled = true;
@@ -358,13 +324,28 @@
             this.param_2_ComBox.Size = new System.Drawing.Size(151, 21);
             this.param_2_ComBox.TabIndex = 20;
             // 
-            // param_3_ComBox
+            // rule_2_ComBox
             // 
-            this.param_3_ComBox.FormattingEnabled = true;
-            this.param_3_ComBox.Location = new System.Drawing.Point(430, 58);
-            this.param_3_ComBox.Name = "param_3_ComBox";
-            this.param_3_ComBox.Size = new System.Drawing.Size(151, 21);
-            this.param_3_ComBox.TabIndex = 21;
+            this.rule_2_ComBox.FormattingEnabled = true;
+            this.rule_2_ComBox.Location = new System.Drawing.Point(602, 20);
+            this.rule_2_ComBox.Name = "rule_2_ComBox";
+            this.rule_2_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_2_ComBox.TabIndex = 37;
+            // 
+            // ruleValue_3_tb
+            // 
+            this.ruleValue_3_tb.Location = new System.Drawing.Point(713, 59);
+            this.ruleValue_3_tb.Name = "ruleValue_3_tb";
+            this.ruleValue_3_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_3_tb.TabIndex = 40;
+            // 
+            // param_5_ComBox
+            // 
+            this.param_5_ComBox.FormattingEnabled = true;
+            this.param_5_ComBox.Location = new System.Drawing.Point(430, 129);
+            this.param_5_ComBox.Name = "param_5_ComBox";
+            this.param_5_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_5_ComBox.TabIndex = 27;
             // 
             // param_4_ComBox
             // 
@@ -373,6 +354,29 @@
             this.param_4_ComBox.Name = "param_4_ComBox";
             this.param_4_ComBox.Size = new System.Drawing.Size(151, 21);
             this.param_4_ComBox.TabIndex = 22;
+            // 
+            // ruleValue_2_tb
+            // 
+            this.ruleValue_2_tb.Location = new System.Drawing.Point(713, 21);
+            this.ruleValue_2_tb.Name = "ruleValue_2_tb";
+            this.ruleValue_2_tb.Size = new System.Drawing.Size(90, 20);
+            this.ruleValue_2_tb.TabIndex = 38;
+            // 
+            // rule_3_ComBox
+            // 
+            this.rule_3_ComBox.FormattingEnabled = true;
+            this.rule_3_ComBox.Location = new System.Drawing.Point(602, 58);
+            this.rule_3_ComBox.Name = "rule_3_ComBox";
+            this.rule_3_ComBox.Size = new System.Drawing.Size(90, 21);
+            this.rule_3_ComBox.TabIndex = 39;
+            // 
+            // param_3_ComBox
+            // 
+            this.param_3_ComBox.FormattingEnabled = true;
+            this.param_3_ComBox.Location = new System.Drawing.Point(430, 58);
+            this.param_3_ComBox.Name = "param_3_ComBox";
+            this.param_3_ComBox.Size = new System.Drawing.Size(151, 21);
+            this.param_3_ComBox.TabIndex = 21;
             // 
             // label1
             // 
@@ -559,17 +563,6 @@
             this.mainGroup.TabIndex = 18;
             this.mainGroup.TabStop = false;
             // 
-            // cat_rb
-            // 
-            this.cat_rb.AutoSize = true;
-            this.cat_rb.Location = new System.Drawing.Point(357, 335);
-            this.cat_rb.Name = "cat_rb";
-            this.cat_rb.Size = new System.Drawing.Size(80, 17);
-            this.cat_rb.TabIndex = 20;
-            this.cat_rb.TabStop = true;
-            this.cat_rb.Text = "Категорию";
-            this.cat_rb.UseVisualStyleBackColor = true;
-            // 
             // rule_rb
             // 
             this.rule_rb.AutoSize = true;
@@ -580,6 +573,17 @@
             this.rule_rb.TabStop = true;
             this.rule_rb.Text = "Правило";
             this.rule_rb.UseVisualStyleBackColor = true;
+            // 
+            // cat_rb
+            // 
+            this.cat_rb.AutoSize = true;
+            this.cat_rb.Location = new System.Drawing.Point(357, 335);
+            this.cat_rb.Name = "cat_rb";
+            this.cat_rb.Size = new System.Drawing.Size(80, 17);
+            this.cat_rb.TabIndex = 20;
+            this.cat_rb.TabStop = true;
+            this.cat_rb.Text = "Категорию";
+            this.cat_rb.UseVisualStyleBackColor = true;
             // 
             // OpeningWin_ElementSelection
             // 

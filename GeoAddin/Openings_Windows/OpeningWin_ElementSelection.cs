@@ -16,7 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+//using System.Windows.Shapes;
 using RevitServices.Persistence;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
@@ -24,6 +24,7 @@ using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
+using System.IO;
 
 namespace GeoAddin.Openings_Windows
 {
@@ -38,7 +39,8 @@ namespace GeoAddin.Openings_Windows
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public int ruleCount = 1;
         static List<Element> elementsInView;
-        List<Parameter> parameter;
+        static List<Parameter> parameter;
+        List<Element> roughSample = new List<Element>();
 
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
@@ -66,6 +68,15 @@ namespace GeoAddin.Openings_Windows
             for (int i = 2; i <= 8; i++) (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).TextChanged += new System.EventHandler(selectControl);
             //**************************************************************//
 
+            for (int i = 1; i <= 5; i++)
+            {
+                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).TextChanged += new System.EventHandler(ruleSelectControl); //нужно в реалтайме мониторить соответствие условия типу параметра
+                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Равно");
+                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Больше");
+                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Меньше");
+                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Содержит"); //пока думаю над реализацией. Возможно, стоит убрать
+            } 
+
             foreach (var element in elementsInView)
             {
                 try
@@ -84,6 +95,8 @@ namespace GeoAddin.Openings_Windows
             }
 
             (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true; //сортирую по алфавиту
+
+
         }
 
 
@@ -192,6 +205,8 @@ namespace GeoAddin.Openings_Windows
         {
             if (cat_rb.Checked) addDelControl("add", "cat");
             if (rule_rb.Checked) addDelControl("add", "param");
+
+
         }
 
         private void delete_bt_Click(object sender, EventArgs e)
@@ -208,7 +223,41 @@ namespace GeoAddin.Openings_Windows
             (ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Items.Clear();
             generalParameters(); //суть войда в том, чтобы обновить и составить актуальный список общих параметров
 
+            Task.Factory.StartNew(roughSampling); //возможно, точка вызова будет меняться
 
+        }
+
+        private void ruleSelectControl(object sender, EventArgs e) //для контроля соответствия условия типу параметра
+        {
+            System.Windows.Forms.ComboBox combox = sender as System.Windows.Forms.ComboBox;
+            string paramName = "param" + combox.Name.Remove(0, 4);
+            //(ParamGroup.Controls[paramName] as System.Windows.Forms.ComboBox)
+
+            /////временный фрагмент///
+            //string path = Path.GetFullPath(@"C:\Users\1\Desktop\Sample.txt"); 
+            //StreamWriter sr = new StreamWriter(path);
+            //Element el = elementsInView[0];
+            /////конец временного фрагмента///
+
+
+            //foreach (var param in parameter)
+            //{
+            //    //if (param.Definition.Name.ToString() == (ParamGroup.Controls[paramName] as System.Windows.Forms.ComboBox).Text) MessageBox.Show(param.Definition.ParameterType.ToString());
+            //    sr.Write(param.Definition.ParameterType.ToString());
+            //    sr.Write(" - ");
+            //    try
+            //    {
+            //        sr.WriteLine(param.AsDouble().ToString());
+            //    }
+            //    catch
+            //    {
+            //        sr.WriteLine(param.AsString());
+            //    }
+
+                
+
+            //}
+            //sr.Close();
         }
 
         static Element findElement(string name) //модуль находит и возвращает элемент из листа коллектора по его названию
@@ -223,12 +272,14 @@ namespace GeoAddin.Openings_Windows
         static List<string> getParamNames(List<Parameter> recievedParam) //задуматься над тем, чтобы здесь же составлять результирующий лист с выборкой общих параметров
         {
             List<string> nameList = new List<string>();
+            parameter = new List<Parameter>();
 
             foreach (Parameter param in recievedParam)
             {
-                try //не у всех параметров есть безопасно возвращаемое "имя"
+                try //не у всех параметров есть безопасно возвращаемое "имя", такие параметры нас не интересуют
                 {
                     nameList.Add(param.Definition.Name);
+                    parameter.Add(param);
                 }
                 catch
                 {
@@ -240,7 +291,8 @@ namespace GeoAddin.Openings_Windows
         private void generalParameters()
         {
             List<string> nameList = null; //свожу задачу к более простой выборке, чтобы не делать компаратор для класса Parameter
-            Element element = null;
+            Element element;
+
 
             for (int i = 2; i <= count; i++)
             {
@@ -268,10 +320,61 @@ namespace GeoAddin.Openings_Windows
 
         }
 
+        private void roughSampling() //осуществляется грубая выборка (без учета параметров) элементов выбранных категорий, 
+        { //чтобы при учете параметров не было необходимости проверять все элементы
+
+            if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Text != "Все элементы")
+            {
+                roughSample.Clear();
+                List<string> selectedCategories = new List<string>();
+                for (int i = 2; i <= count; i++) selectedCategories.Add((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
+
+                foreach (var element in elementsInView)
+                    if (selectedCategories.Contains(element.Category.Name.ToString()) == true) roughSample.Add(element);
+            }
+        }
+
 
         private void result_bt_Click(object sender, EventArgs e)
         {
+            result_DGV.Rows.Clear();
+            result_DGV.Columns.Clear();
+            result_DGV.Refresh();
+            result_DGV.Columns.Add("ID", "ID");
+            result_DGV.Columns.Add("Cat", "Category");
+            result_DGV.Columns.Add("Name", "Name");
+            //временный блок
+            if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+            for (int i = 1; i <= ruleCount; i++)
+                result_DGV.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
+            //конец временного блока 
 
+
+            foreach (var el in roughSample)
+            {
+                int row = result_DGV.Rows.Add();
+                result_DGV.Rows[row].Cells[0].Value = el.Id.ToString();
+                result_DGV.Rows[row].Cells[1].Value = el.Category.Name.ToString();
+                result_DGV.Rows[row].Cells[2].Value = el.Name.ToString();
+
+
+
+                if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+                    
+                    for (int i = 1; i <= ruleCount; i++)
+                    {
+                        try
+                        {
+
+                            //result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = el.LookupParameter((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text).AsString();
+                        }
+                        catch { }
+
+                    }
+
+
+            }
+            result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
         }
     }
 }
