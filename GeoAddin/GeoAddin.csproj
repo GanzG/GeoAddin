@@ -72,6 +72,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModifyElements.cs" />
     <Compile Include="Openings_Commands\ElementSelection.cs" />
     <Compile Include="Openings_Commands\OpeningGenerating.cs" />
     <Compile Include="Class.cs" />

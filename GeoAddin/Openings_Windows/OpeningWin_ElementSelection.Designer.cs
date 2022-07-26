@@ -70,14 +70,14 @@
             this.loadDGV_bt = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.hightlightElem_bt = new System.Windows.Forms.Button();
+            this.action_bt = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.delete_bt = new System.Windows.Forms.Button();
             this.add_bt = new System.Windows.Forms.Button();
             this.mainGroup = new System.Windows.Forms.GroupBox();
             this.rule_rb = new System.Windows.Forms.RadioButton();
             this.cat_rb = new System.Windows.Forms.RadioButton();
+            this.action_ComBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
@@ -89,7 +89,7 @@
             this.close_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.close_bt.Location = new System.Drawing.Point(478, 335);
             this.close_bt.Name = "close_bt";
-            this.close_bt.Size = new System.Drawing.Size(113, 42);
+            this.close_bt.Size = new System.Drawing.Size(109, 42);
             this.close_bt.TabIndex = 0;
             this.close_bt.Text = "Отмена";
             this.close_bt.UseVisualStyleBackColor = true;
@@ -479,26 +479,17 @@
             this.label8.TabIndex = 16;
             this.label8.Text = "Действия над элементами";
             // 
-            // button1
+            // action_bt
             // 
-            this.button1.Enabled = false;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(477, 239);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(114, 42);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "Какое-то действие";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // hightlightElem_bt
-            // 
-            this.hightlightElem_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.hightlightElem_bt.Location = new System.Drawing.Point(357, 239);
-            this.hightlightElem_bt.Name = "hightlightElem_bt";
-            this.hightlightElem_bt.Size = new System.Drawing.Size(114, 42);
-            this.hightlightElem_bt.TabIndex = 14;
-            this.hightlightElem_bt.Text = "Выделить все элементы";
-            this.hightlightElem_bt.UseVisualStyleBackColor = true;
+            this.action_bt.Enabled = false;
+            this.action_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.action_bt.Location = new System.Drawing.Point(357, 244);
+            this.action_bt.Name = "action_bt";
+            this.action_bt.Size = new System.Drawing.Size(114, 33);
+            this.action_bt.TabIndex = 15;
+            this.action_bt.Text = "Выполнить:";
+            this.action_bt.UseVisualStyleBackColor = true;
+            this.action_bt.Click += new System.EventHandler(this.action_bt_Click);
             // 
             // button3
             // 
@@ -540,6 +531,7 @@
             // 
             // mainGroup
             // 
+            this.mainGroup.Controls.Add(this.action_ComBox);
             this.mainGroup.Controls.Add(this.rule_rb);
             this.mainGroup.Controls.Add(this.cat_rb);
             this.mainGroup.Controls.Add(this.delete_bt);
@@ -549,9 +541,8 @@
             this.mainGroup.Controls.Add(this.close_bt);
             this.mainGroup.Controls.Add(this.label8);
             this.mainGroup.Controls.Add(this.result_DGV);
-            this.mainGroup.Controls.Add(this.button1);
+            this.mainGroup.Controls.Add(this.action_bt);
             this.mainGroup.Controls.Add(this.result_bt);
-            this.mainGroup.Controls.Add(this.hightlightElem_bt);
             this.mainGroup.Controls.Add(this.addToResult_bt);
             this.mainGroup.Controls.Add(this.label7);
             this.mainGroup.Controls.Add(this.clearAll_bt);
@@ -584,6 +575,14 @@
             this.cat_rb.TabStop = true;
             this.cat_rb.Text = "Категорию";
             this.cat_rb.UseVisualStyleBackColor = true;
+            // 
+            // action_ComBox
+            // 
+            this.action_ComBox.FormattingEnabled = true;
+            this.action_ComBox.Location = new System.Drawing.Point(480, 251);
+            this.action_ComBox.Name = "action_ComBox";
+            this.action_ComBox.Size = new System.Drawing.Size(107, 21);
+            this.action_ComBox.TabIndex = 48;
             // 
             // OpeningWin_ElementSelection
             // 
@@ -655,13 +654,13 @@
         private System.Windows.Forms.Button loadDGV_bt;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button hightlightElem_bt;
+        private System.Windows.Forms.Button action_bt;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button delete_bt;
         private System.Windows.Forms.Button add_bt;
         private System.Windows.Forms.GroupBox mainGroup;
         private System.Windows.Forms.RadioButton rule_rb;
         private System.Windows.Forms.RadioButton cat_rb;
+        private System.Windows.Forms.ComboBox action_ComBox;
     }
 }

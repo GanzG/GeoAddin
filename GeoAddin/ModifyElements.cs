@@ -4,42 +4,41 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Configuration;
-using System.Reflection;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Xml.Linq;
-using System.Windows;
-using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
-using Revit.GeometryConversion;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GeoAddin
 {
     [Transaction(TransactionMode.Manual)]
-    public class ElementSelection : IExternalCommand
+    internal class ModifyElements : IExternalCommand
     {
         static UIApplication uiapp;
         static UIDocument uidoc;
-        static RevitApplication app;
+        //static RevitApplication app;
         static Document doc;
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             uiapp = commandData.Application;
             uidoc = uiapp.ActiveUIDocument;
-            app = uiapp.Application;
+            //app = uiapp.Application;
             doc = uidoc.Document;
-
-            Openings_Windows.OpeningWin_ElementSelection win = new Openings_Windows.OpeningWin_ElementSelection(uiapp);
-
-            win.Show();
 
             return Result.Succeeded;
         }
 
+        public void deleteElement(List<ElementId> listId)
+        {
+            using (Transaction t = new Transaction(doc, "Удаление элементов"))
+            {
+                t.Start();
+                doc.Delete(listId);
+                t.Commit();
+            }
+        }
+
+
     }
-    }
+}

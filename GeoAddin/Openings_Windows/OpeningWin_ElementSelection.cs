@@ -26,8 +26,11 @@ using Autodesk.Revit.UI.Selection;
 using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
 using System.IO;
 
+
+
 namespace GeoAddin.Openings_Windows
 {
+    [Transaction(TransactionMode.Manual)]
     public partial class OpeningWin_ElementSelection : System.Windows.Forms.Form
     {
         public UIDocument uidoc;
@@ -41,6 +44,7 @@ namespace GeoAddin.Openings_Windows
         static List<Element> elementsInView;
         static List<Parameter> parameter;
         List<Element> roughSample = new List<Element>();
+        List<ElementId> idList;
 
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
@@ -75,7 +79,14 @@ namespace GeoAddin.Openings_Windows
                 (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Больше");
                 (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Меньше");
                 (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Содержит"); //пока думаю над реализацией. Возможно, стоит убрать
-            } 
+            }
+
+            //---действия над элементами из DGV---//
+            action_ComBox.Items.Add("Выделить");
+            action_ComBox.Items.Add("Скрыть");
+            action_ComBox.Items.Add("Показать все");
+            action_ComBox.Items.Add("Удалить");
+            //---действия над элементами из DGV---//
 
             foreach (var element in elementsInView)
             {
@@ -300,7 +311,7 @@ namespace GeoAddin.Openings_Windows
                     return parameter.AsString();
                     break;
                 case StorageType.Double:
-                    return Convert.ToString(parameter.AsDouble());
+                    return Convert.ToString(Math.Round(parameter.AsDouble() * 304.8, 2) + " мм"); //перевод из футов в мм. В какой-то степени костыль, ибо неизвестно, только ли размеры хранятся в double
                     break;
                 case StorageType.Integer:
                     return Convert.ToString(parameter.AsInteger());
@@ -364,6 +375,7 @@ namespace GeoAddin.Openings_Windows
 
         private void result_bt_Click(object sender, EventArgs e)
         {
+            
             result_DGV.Rows.Clear();
             result_DGV.Columns.Clear();
             result_DGV.Refresh();
@@ -376,11 +388,14 @@ namespace GeoAddin.Openings_Windows
                 result_DGV.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
             //конец временного блока 
 
+            idList = new List<ElementId>(); //мб объявление вынести в глобальный формат, чтобы в дальнейшем войд с действиями работал по этому списку
+                                                            //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
 
             foreach (var el in roughSample)
             {
                 int row = result_DGV.Rows.Add();
                 result_DGV.Rows[row].Cells[0].Value = el.Id.ToString();
+                idList.Add(el.Id);
                 result_DGV.Rows[row].Cells[1].Value = el.Category.Name.ToString();
                 result_DGV.Rows[row].Cells[2].Value = el.Name.ToString();
 
@@ -392,6 +407,8 @@ namespace GeoAddin.Openings_Windows
                     {
                         try
                         {
+                            //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
+                            //возможно, что размером в мм является все, что хранится в double
                             result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
                         }
                         catch { }
@@ -401,6 +418,47 @@ namespace GeoAddin.Openings_Windows
 
             }
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
+
+            if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;
+
+            
+        }
+
+
+                //        using (Transaction t = new Transaction(doc, "Удаление старых отверстий"))
+                //{
+                //    foreach (Element element in openingInstances)
+                //    {
+                //        t.Start();
+                //        doc.Delete(element.Id);
+                //        t.Commit();
+                //    }
+                //}
+
+
+        private void action_bt_Click(object sender, EventArgs e) //надо не забыть сделать действия направленными на выделенные в DGV элементы, но это чуть позже
+        {
+            if (result_DGV.Rows.Count >= 1) 
+                switch(action_ComBox.Text)
+                {
+                    case "":
+                        break;
+                    case "Выделить":
+                        uidoc.Selection.SetElementIds(idList); //первоначальное рабочее решение. Надо подумать, как сделать более корректно/юзерабельно 
+                        break;
+                    case "Скрыть":
+                        uidoc.ActiveView.HideElements(idList);
+                        break;
+                    case "Показать все":
+                        uidoc.ActiveView.UnhideElements(idList);
+                        break;
+                    case "Удалить":
+
+                        ModifyElements modifyElements = new ModifyElements();
+                        //modifyElements.deleteElement(idList);
+                        //modifyElements.Execute();
+                        break;
+                }
         }
     }
 }
