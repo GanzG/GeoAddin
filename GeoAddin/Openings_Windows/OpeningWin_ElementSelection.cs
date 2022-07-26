@@ -288,6 +288,33 @@ namespace GeoAddin.Openings_Windows
             return nameList;
         }
 
+        static string getParamValue(string name, Element element)
+        {
+            Parameter parameter = null;
+            foreach (Parameter param in element.Parameters) if (param.Definition.Name.ToString() == name) parameter = param;
+            var storage_type = parameter.StorageType;
+
+            switch(storage_type)
+            {
+                case StorageType.String:
+                    return parameter.AsString();
+                    break;
+                case StorageType.Double:
+                    return Convert.ToString(parameter.AsDouble());
+                    break;
+                case StorageType.Integer:
+                    return Convert.ToString(parameter.AsInteger());
+                    break;
+                case StorageType.ElementId:
+                    return Convert.ToString(parameter.AsElementId());
+                    break;
+
+                default: return "None";
+            }
+
+        }
+
+
         private void generalParameters()
         {
             List<string> nameList = null; //свожу задачу к более простой выборке, чтобы не делать компаратор для класса Parameter
@@ -365,8 +392,7 @@ namespace GeoAddin.Openings_Windows
                     {
                         try
                         {
-
-                            //result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = el.LookupParameter((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text).AsString();
+                            result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
                         }
                         catch { }
 
