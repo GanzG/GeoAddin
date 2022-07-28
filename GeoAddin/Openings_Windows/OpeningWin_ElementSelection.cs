@@ -62,13 +62,16 @@ namespace GeoAddin.Openings_Windows
         public UIApplication uiapp;
         public RevitApplication app;
 
-        public bool threadState = true;
+        //public bool threadState = true;
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public int ruleCount = 1;
         static List<Element> elementsInView;
         static List<Parameter> parameter;
         List<Element> roughSample = new List<Element>();
         public static List<ElementId> idList;
+
+        public static string[,] paramNamesAndTypes;
+
 
         public ExternalEvent ExEvent { get; set; }
         public OpeningWin_ElementSelection(UIApplication uiapp)
@@ -98,13 +101,9 @@ namespace GeoAddin.Openings_Windows
             //**************************************************************//
 
             for (int i = 1; i <= 5; i++)
-            {
-                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).TextChanged += new System.EventHandler(ruleSelectControl); //нужно в реалтайме мониторить соответствие условия типу параметра
-                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Равно");
-                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Больше");
-                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Меньше");
-                (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("Содержит"); //пока думаю над реализацией. Возможно, стоит убрать
-            }
+                (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).TextChanged += new System.EventHandler(ruleSelectControl); 
+            //нужно в реалтайме мониторить соответствие условия типу параметра
+
 
             //---действия над элементами из DGV---//
             action_ComBox.Items.Add("Выделить");
@@ -233,7 +232,7 @@ namespace GeoAddin.Openings_Windows
 
         private void close_bt_Click(object sender, EventArgs e)
         {
-            threadState = false;
+            //threadState = false;
             this.Close();
         }
 
@@ -265,8 +264,32 @@ namespace GeoAddin.Openings_Windows
 
         private void ruleSelectControl(object sender, EventArgs e) //для контроля соответствия условия типу параметра
         {
-            System.Windows.Forms.ComboBox combox = sender as System.Windows.Forms.ComboBox;
-            string paramName = "param" + combox.Name.Remove(0, 4);
+            System.Windows.Forms.ComboBox paramBox = sender as System.Windows.Forms.ComboBox;
+
+            string ruleName = "rule" + paramBox.Name.Remove(0, 5);
+            System.Windows.Forms.ComboBox ruleBox = (ParamGroup.Controls[ruleName] as System.Windows.Forms.ComboBox);
+            //string paramName = "param" + combox.Name.Remove(0, 4);
+            string storageType = "";
+            //надо написать класс, который будет содержать методы для возврата имен параметров, их типов и т.п.
+
+            for (int i = 0; i < paramNamesAndTypes.Length / paramNamesAndTypes.Rank; i++)
+                if (paramNamesAndTypes[i, 0] == paramBox.Text)
+                    storageType = paramNamesAndTypes[i, 1];
+
+
+            switch (storageType)
+            {
+                case "String":
+                    ruleBox.Items.Clear();
+                    ruleBox.Items.Add("Равен");
+                    break;
+                default:
+                    ruleBox.Items.Clear();
+                    ruleBox.Items.Add("Равен");
+                    ruleBox.Items.Add("Больше");
+                    ruleBox.Items.Add("Меньше");
+                    break;
+            }
 
         }
 
@@ -284,12 +307,23 @@ namespace GeoAddin.Openings_Windows
             List<string> nameList = new List<string>();
             parameter = new List<Parameter>();
 
+            paramNamesAndTypes = new string[recievedParam.Count, 2];
+            int i = 0;
+
             foreach (Parameter param in recievedParam)
             {
                 try //не у всех параметров есть безопасно возвращаемое "имя", такие параметры нас не интересуют
                 {
                     nameList.Add(param.Definition.Name);
                     parameter.Add(param);
+
+                    //---Возможно, имеет смысл перейти на использование такой локальной "бд"---//
+                    paramNamesAndTypes[i, 0] = param.Definition.Name.ToString();
+                    paramNamesAndTypes[i, 1] = param.StorageType.ToString();
+                    i++;
+                    //MessageBox.Show(param.StorageType.ToString());
+                    //------//
+
                 }
                 catch
                 {
@@ -370,6 +404,8 @@ namespace GeoAddin.Openings_Windows
                     if (selectedCategories.Contains(element.Category.Name.ToString()) == true) roughSample.Add(element);
             }
         }
+
+
 
 
         private void result_bt_Click(object sender, EventArgs e)
