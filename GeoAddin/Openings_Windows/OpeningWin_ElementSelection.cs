@@ -31,10 +31,34 @@ using System.IO;
 namespace GeoAddin.Openings_Windows
 {
     [Transaction(TransactionMode.Manual)]
+
+    public class EventRegHandler : IExternalEventHandler
+    {
+        public bool EventRegistered { get; set; }
+        public void Execute(UIApplication app)
+        {
+
+            using (Transaction t = new Transaction(OpeningWin_ElementSelection.doc, "Удаление выделенных элементов"))
+            {
+                t.Start();
+                OpeningWin_ElementSelection.doc.Delete(OpeningWin_ElementSelection.idList);
+                t.Commit();
+
+            }
+
+        }
+
+
+        public string GetName()
+        {
+            return "EventRegHandler";
+        }
+    }
+
     public partial class OpeningWin_ElementSelection : System.Windows.Forms.Form
     {
         public UIDocument uidoc;
-        public Document doc;
+        public static Document doc;
         public UIApplication uiapp;
         public RevitApplication app;
 
@@ -44,8 +68,9 @@ namespace GeoAddin.Openings_Windows
         static List<Element> elementsInView;
         static List<Parameter> parameter;
         List<Element> roughSample = new List<Element>();
-        List<ElementId> idList;
+        public static List<ElementId> idList;
 
+        public ExternalEvent ExEvent { get; set; }
         public OpeningWin_ElementSelection(UIApplication uiapp)
         {
             InitializeComponent();
@@ -242,33 +267,7 @@ namespace GeoAddin.Openings_Windows
         {
             System.Windows.Forms.ComboBox combox = sender as System.Windows.Forms.ComboBox;
             string paramName = "param" + combox.Name.Remove(0, 4);
-            //(ParamGroup.Controls[paramName] as System.Windows.Forms.ComboBox)
 
-            /////временный фрагмент///
-            //string path = Path.GetFullPath(@"C:\Users\1\Desktop\Sample.txt"); 
-            //StreamWriter sr = new StreamWriter(path);
-            //Element el = elementsInView[0];
-            /////конец временного фрагмента///
-
-
-            //foreach (var param in parameter)
-            //{
-            //    //if (param.Definition.Name.ToString() == (ParamGroup.Controls[paramName] as System.Windows.Forms.ComboBox).Text) MessageBox.Show(param.Definition.ParameterType.ToString());
-            //    sr.Write(param.Definition.ParameterType.ToString());
-            //    sr.Write(" - ");
-            //    try
-            //    {
-            //        sr.WriteLine(param.AsDouble().ToString());
-            //    }
-            //    catch
-            //    {
-            //        sr.WriteLine(param.AsString());
-            //    }
-
-                
-
-            //}
-            //sr.Close();
         }
 
         static Element findElement(string name) //модуль находит и возвращает элемент из листа коллектора по его названию
@@ -425,17 +424,6 @@ namespace GeoAddin.Openings_Windows
         }
 
 
-                //        using (Transaction t = new Transaction(doc, "Удаление старых отверстий"))
-                //{
-                //    foreach (Element element in openingInstances)
-                //    {
-                //        t.Start();
-                //        doc.Delete(element.Id);
-                //        t.Commit();
-                //    }
-                //}
-
-
         private void action_bt_Click(object sender, EventArgs e) //надо не забыть сделать действия направленными на выделенные в DGV элементы, но это чуть позже
         {
             if (result_DGV.Rows.Count >= 1) 
@@ -453,10 +441,11 @@ namespace GeoAddin.Openings_Windows
                         uidoc.ActiveView.UnhideElements(idList);
                         break;
                     case "Удалить":
+                        if (ExEvent != null)
+                            ExEvent.Raise();
+                        else
+                            MessageBox.Show("External event handler is null");
 
-                        ModifyElements modifyElements = new ModifyElements();
-                        //modifyElements.deleteElement(idList);
-                        //modifyElements.Execute();
                         break;
                 }
         }

@@ -578,6 +578,7 @@
             // 
             // action_ComBox
             // 
+            this.action_ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.action_ComBox.FormattingEnabled = true;
             this.action_ComBox.Location = new System.Drawing.Point(480, 251);
             this.action_ComBox.Name = "action_ComBox";

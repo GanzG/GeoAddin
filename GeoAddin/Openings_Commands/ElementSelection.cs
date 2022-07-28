@@ -17,6 +17,9 @@ using System.Windows;
 using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
 using Revit.GeometryConversion;
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace GeoAddin
 {
     [Transaction(TransactionMode.Manual)]
@@ -26,6 +29,7 @@ namespace GeoAddin
         static UIDocument uidoc;
         static RevitApplication app;
         static Document doc;
+        ExternalEvent _exEvent;
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -36,6 +40,10 @@ namespace GeoAddin
 
             Openings_Windows.OpeningWin_ElementSelection win = new Openings_Windows.OpeningWin_ElementSelection(uiapp);
 
+
+            Openings_Windows.EventRegHandler _exeventHander = new Openings_Windows.EventRegHandler();
+            _exEvent = ExternalEvent.Create(_exeventHander);
+            win.ExEvent = _exEvent;
             win.Show();
 
             return Result.Succeeded;
