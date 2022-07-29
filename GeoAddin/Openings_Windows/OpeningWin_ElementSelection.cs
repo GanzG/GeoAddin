@@ -112,6 +112,12 @@ namespace GeoAddin.Openings_Windows
             action_ComBox.Items.Add("Удалить");
             //---действия над элементами из DGV---//
 
+            //---логические отношения между правилами---//
+            relationship_ComBox.Items.Add("И");
+            relationship_ComBox.Items.Add("ИЛИ");
+            relationship_ComBox.Text = "ИЛИ";
+            //---логические отношения между правилами---//
+
             foreach (var element in elementsInView)
             {
                 try
@@ -283,6 +289,9 @@ namespace GeoAddin.Openings_Windows
                     ruleBox.Items.Clear();
                     ruleBox.Items.Add("Равен");
                     break;
+                case "None":
+                    ruleBox.Items.Clear();
+                    break;
                 default:
                     ruleBox.Items.Clear();
                     ruleBox.Items.Add("Равен");
@@ -344,7 +353,7 @@ namespace GeoAddin.Openings_Windows
                     return parameter.AsString();
                     break;
                 case StorageType.Double:
-                    return Convert.ToString(Math.Round(parameter.AsDouble() * 304.8, 2) + " мм"); //перевод из футов в мм. В какой-то степени костыль, ибо неизвестно, только ли размеры хранятся в double
+                    return Convert.ToString(Math.Round(parameter.AsDouble() * 304.8, 2)); //перевод из футов в мм. В какой-то степени костыль, ибо неизвестно, только ли размеры хранятся в double
                     break;
                 case StorageType.Integer:
                     return Convert.ToString(parameter.AsInteger());
@@ -405,11 +414,81 @@ namespace GeoAddin.Openings_Windows
             }
         }
 
+        public bool checkRules(Element element)
+        {
+            bool res = false;
+            string relationship = relationship_ComBox.Text; //узнаю текущие отношения между правилами
+            string paramName; //будет получать имя параметра
+            string storageType; //будет получать тип параметра
+            string value;
+
+            int checkRuleCount = 0; //число правил, которым текущий элемент удовлетворяет
+
+            for (int i = 1; i <= ruleCount; i++)
+            {
+                if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "" && (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+                {
+                    //MessageBox.Show("Внутрянка");
+                    paramName = (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+                    storageType = paramNamesAndTypes[Array.IndexOf(paramNamesAndTypes, paramName), 1];
+
+                    value = getParamValue(paramName, element);
+                    double doubleValue = 0;
+                    double doubleSourceValue = 0;
+                    string rule = (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+                    MessageBox.Show(storageType);
+                    switch (storageType)
+                    {
+                        case "String":
+                            MessageBox.Show(value + " | " + (ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text);
+                            if (rule == "Равен" && value == (ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text)
+                                checkRuleCount++;
+                            break;
+
+                        case "None":
+                            break;
+
+                        default:
+
+                            MessageBox.Show((Convert.ToDouble(value)).ToString() + " | " + Convert.ToDouble((ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text).ToString());
+
+                            if (Double.TryParse(value, out doubleValue) && Double.TryParse((ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text, out doubleSourceValue))
+
+                            {
+                                MessageBox.Show(doubleValue.ToString() + " | " + doubleSourceValue.ToString());
+                                if (((rule == "Равен" && doubleValue == doubleSourceValue) || (rule == "Больше" && doubleValue > doubleSourceValue) || (rule == "Меньше" && doubleValue < doubleSourceValue)))
+                                    checkRuleCount++;
+                            }
+                            break;
+
+                    }
+
+                }
+                else if ((ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text == "") res = true;
+
+
+            }
+
+            switch(relationship) //число выполненных правил сопоставляется с их количеством в зависимости от отношений между ними
+            {
+                case "И": //количество выполненных правил должно быть равным количеству правил
+                    if (checkRuleCount == ruleCount) res = true;
+                    break;
+                case "ИЛИ": //количество должно быть хотя бы равным 1
+                    if (checkRuleCount >= 1) res = true;
+                    break;
+            }
+
+            //if ((ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text == "")
+
+            return res;
+        }
 
 
 
         private void result_bt_Click(object sender, EventArgs e)
         {
+            //MessageBox.Show(ruleCount.ToString());
             
             result_DGV.Rows.Clear();
             result_DGV.Columns.Clear();
@@ -423,20 +502,16 @@ namespace GeoAddin.Openings_Windows
                 result_DGV.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
             //конец временного блока 
 
-            idList = new List<ElementId>(); //мб объявление вынести в глобальный формат, чтобы в дальнейшем войд с действиями работал по этому списку
+            idList = new List<ElementId>(); 
                                                             //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
 
             foreach (var el in roughSample)
             {
-                int row = result_DGV.Rows.Add();
-                result_DGV.Rows[row].Cells[0].Value = el.Id.ToString();
-                idList.Add(el.Id);
-                result_DGV.Rows[row].Cells[1].Value = el.Category.Name.ToString();
-                result_DGV.Rows[row].Cells[2].Value = el.Name.ToString();
 
 
 
-                if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+
+                //if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
                     
                     for (int i = 1; i <= ruleCount; i++)
                     {
@@ -444,7 +519,17 @@ namespace GeoAddin.Openings_Windows
                         {
                             //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
                             //возможно, что размером в мм является все, что хранится в double
-                            result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
+                            
+                            if (checkRules(el))
+                            {
+                                int row = result_DGV.Rows.Add();
+                                result_DGV.Rows[row].Cells[0].Value = el.Id.ToString();
+                                idList.Add(el.Id);
+                                result_DGV.Rows[row].Cells[1].Value = el.Category.Name.ToString();
+                                result_DGV.Rows[row].Cells[2].Value = el.Name.ToString();
+                                result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
+
+                            }
                         }
                         catch { }
 
