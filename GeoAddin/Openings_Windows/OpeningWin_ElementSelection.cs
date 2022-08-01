@@ -510,8 +510,6 @@ namespace GeoAddin.Openings_Windows
 
             foreach (var el in roughSample)
             {       
-                    for (int i = 1; i <= ruleCount; i++)
-                    {
                         try
                         {
                             //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
@@ -524,12 +522,13 @@ namespace GeoAddin.Openings_Windows
                                 idList.Add(el.Id);
                                 result_DGV.Rows[row].Cells[1].Value = el.Category.Name.ToString();
                                 result_DGV.Rows[row].Cells[2].Value = el.Name.ToString();
-                                result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
+
+                            for (int i = 1; i <= ruleCount; i++) 
+                            result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
 
                             }
                         }
                         catch { }
-                    }
             }
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
 
