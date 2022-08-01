@@ -35,15 +35,27 @@ namespace GeoAddin.Openings_Windows
     public class EventRegHandler : IExternalEventHandler
     {
         public bool EventRegistered { get; set; }
-        public void Execute(UIApplication app)
+        public void Execute(UIApplication app) //внедрение новых действий осуществлять здесь, основной класс просто ссылается на этот
         {
-
+            if (OpeningWin_ElementSelection.actionType != "" && OpeningWin_ElementSelection.actionType != "Done")
             using (Transaction t = new Transaction(OpeningWin_ElementSelection.doc, "Удаление выделенных элементов"))
             {
                 t.Start();
-                OpeningWin_ElementSelection.doc.Delete(OpeningWin_ElementSelection.idList);
+                    switch(OpeningWin_ElementSelection.actionType)
+                    {
+                        case "Скрыть":
+                            OpeningWin_ElementSelection.doc.ActiveView.HideElements(OpeningWin_ElementSelection.idList);
+                            break;
+                        case "Показать все":
+                            OpeningWin_ElementSelection.doc.ActiveView.UnhideElements(OpeningWin_ElementSelection.idList);
+                            break;
+                        case "Удалить":
+                            OpeningWin_ElementSelection.doc.Delete(OpeningWin_ElementSelection.idList);
+                            break;
+                    }
+                
                 t.Commit();
-
+                    OpeningWin_ElementSelection.actionType = "Done";
             }
 
         }
@@ -71,6 +83,7 @@ namespace GeoAddin.Openings_Windows
         public static List<ElementId> idList;
 
         public static string[,] paramNamesAndTypes;
+        public static string actionType = "";
 
 
         public ExternalEvent ExEvent { get; set; }
@@ -102,7 +115,7 @@ namespace GeoAddin.Openings_Windows
 
             for (int i = 1; i <= 5; i++)
                 (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).TextChanged += new System.EventHandler(ruleSelectControl); 
-            //нужно в реалтайме мониторить соответствие условия типу параметра
+            //нужно в реалтайме подбирать актуальные типы условий
 
 
             //---действия над элементами из DGV---//
@@ -283,7 +296,7 @@ namespace GeoAddin.Openings_Windows
                     storageType = paramNamesAndTypes[i, 1];
 
 
-            switch (storageType)
+            switch (storageType) //при внедрении дополнительных функций необходимо изменять и блок checkRules
             {
                 case "String":
                     ruleBox.Items.Clear();
@@ -431,7 +444,7 @@ namespace GeoAddin.Openings_Windows
 
                     int index = -1;
                     for (int j = 0; j < paramNamesAndTypes.Length / 2; j++)
-                        if (paramNamesAndTypes[j, 0] == paramName) index = j; //изначально было Array.IndexOf, но оно не отрабатывало. Подумать над оптимальным решением
+                        if (paramNamesAndTypes[j, 0] == paramName) index = j; //изначально было Array.IndexOf, но оно не отрабатывало, пришлось цикл с условием фигачить
 
                     storageType = paramNamesAndTypes[index, 1];
                     value = getParamValue(paramName, element);
@@ -456,13 +469,10 @@ namespace GeoAddin.Openings_Windows
                                 if (((rule == "Равен" && doubleValue == doubleSourceValue) || (rule == "Больше" && doubleValue > doubleSourceValue) || (rule == "Меньше" && doubleValue < doubleSourceValue)))
                                     checkRuleCount++;
                             break;
-
                     }
 
                 }
                 else if ((ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text == "") res = true;
-
-
             }
 
             switch(relationship) //число выполненных правил сопоставляется с их количеством в зависимости от отношений между ними
@@ -519,16 +529,11 @@ namespace GeoAddin.Openings_Windows
                             }
                         }
                         catch { }
-
                     }
-
-
             }
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
 
-            if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;
-
-            
+            if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;   
         }
 
 
@@ -542,18 +547,14 @@ namespace GeoAddin.Openings_Windows
                     case "Выделить":
                         uidoc.Selection.SetElementIds(idList); //первоначальное рабочее решение. Надо подумать, как сделать более корректно/юзерабельно 
                         break;
-                    case "Скрыть":
-                        uidoc.ActiveView.HideElements(idList);
-                        break;
-                    case "Показать все":
-                        uidoc.ActiveView.UnhideElements(idList);
-                        break;
-                    case "Удалить":
+                    default:
                         if (ExEvent != null)
+                        {
+                            actionType = action_ComBox.Text;
                             ExEvent.Raise();
+                        }
                         else
                             MessageBox.Show("External event handler is null");
-
                         break;
                 }
         }
