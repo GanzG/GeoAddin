@@ -75,9 +75,11 @@
             this.delete_bt = new System.Windows.Forms.Button();
             this.add_bt = new System.Windows.Forms.Button();
             this.mainGroup = new System.Windows.Forms.GroupBox();
+            this.progress_pb = new System.Windows.Forms.ProgressBar();
+            this.action_ComBox = new System.Windows.Forms.ComboBox();
             this.rule_rb = new System.Windows.Forms.RadioButton();
             this.cat_rb = new System.Windows.Forms.RadioButton();
-            this.action_ComBox = new System.Windows.Forms.ComboBox();
+            this.getPath_sfd = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
@@ -448,6 +450,7 @@
             this.saveDGV_bt.TabIndex = 11;
             this.saveDGV_bt.Text = "Сохранить выборку";
             this.saveDGV_bt.UseVisualStyleBackColor = true;
+            this.saveDGV_bt.Click += new System.EventHandler(this.saveDGV_bt_Click);
             // 
             // loadDGV_bt
             // 
@@ -531,6 +534,7 @@
             // 
             // mainGroup
             // 
+            this.mainGroup.Controls.Add(this.progress_pb);
             this.mainGroup.Controls.Add(this.action_ComBox);
             this.mainGroup.Controls.Add(this.rule_rb);
             this.mainGroup.Controls.Add(this.cat_rb);
@@ -554,6 +558,22 @@
             this.mainGroup.TabIndex = 18;
             this.mainGroup.TabStop = false;
             // 
+            // progress_pb
+            // 
+            this.progress_pb.Location = new System.Drawing.Point(486, 16);
+            this.progress_pb.Name = "progress_pb";
+            this.progress_pb.Size = new System.Drawing.Size(100, 23);
+            this.progress_pb.TabIndex = 49;
+            // 
+            // action_ComBox
+            // 
+            this.action_ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.action_ComBox.FormattingEnabled = true;
+            this.action_ComBox.Location = new System.Drawing.Point(480, 251);
+            this.action_ComBox.Name = "action_ComBox";
+            this.action_ComBox.Size = new System.Drawing.Size(107, 21);
+            this.action_ComBox.TabIndex = 48;
+            // 
             // rule_rb
             // 
             this.rule_rb.AutoSize = true;
@@ -576,14 +596,9 @@
             this.cat_rb.Text = "Категорию";
             this.cat_rb.UseVisualStyleBackColor = true;
             // 
-            // action_ComBox
+            // getPath_sfd
             // 
-            this.action_ComBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.action_ComBox.FormattingEnabled = true;
-            this.action_ComBox.Location = new System.Drawing.Point(480, 251);
-            this.action_ComBox.Name = "action_ComBox";
-            this.action_ComBox.Size = new System.Drawing.Size(107, 21);
-            this.action_ComBox.TabIndex = 48;
+            this.getPath_sfd.Filter = "Таблица Excel | *.xlsx";
             // 
             // OpeningWin_ElementSelection
             // 
@@ -663,5 +678,7 @@
         private System.Windows.Forms.RadioButton rule_rb;
         private System.Windows.Forms.RadioButton cat_rb;
         private System.Windows.Forms.ComboBox action_ComBox;
+        private System.Windows.Forms.ProgressBar progress_pb;
+        private System.Windows.Forms.SaveFileDialog getPath_sfd;
     }
 }

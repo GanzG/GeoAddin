@@ -32,40 +32,7 @@ namespace GeoAddin.Openings_Windows
 {
     [Transaction(TransactionMode.Manual)]
 
-    public class EventRegHandler : IExternalEventHandler
-    {
-        public bool EventRegistered { get; set; }
-        public void Execute(UIApplication app) //внедрение новых действий осуществлять здесь, основной класс просто ссылается на этот
-        {
-            if (OpeningWin_ElementSelection.actionType != "" && OpeningWin_ElementSelection.actionType != "Done")
-            using (Transaction t = new Transaction(OpeningWin_ElementSelection.doc, "Удаление выделенных элементов"))
-            {
-                t.Start();
-                    switch(OpeningWin_ElementSelection.actionType)
-                    {
-                        case "Скрыть":
-                            OpeningWin_ElementSelection.doc.ActiveView.HideElements(OpeningWin_ElementSelection.idList);
-                            break;
-                        case "Показать все":
-                            OpeningWin_ElementSelection.doc.ActiveView.UnhideElements(OpeningWin_ElementSelection.idList);
-                            break;
-                        case "Удалить":
-                            OpeningWin_ElementSelection.doc.Delete(OpeningWin_ElementSelection.idList);
-                            break;
-                    }
-                
-                t.Commit();
-                    OpeningWin_ElementSelection.actionType = "Done";
-            }
-
-        }
-
-
-        public string GetName()
-        {
-            return "EventRegHandler";
-        }
-    }
+    
 
     public partial class OpeningWin_ElementSelection : System.Windows.Forms.Form
     {
@@ -78,7 +45,7 @@ namespace GeoAddin.Openings_Windows
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public int ruleCount = 1;
         static List<Element> elementsInView;
-        static List<Parameter> parameter;
+        static List<Autodesk.Revit.DB.Parameter> parameter;
         List<Element> roughSample = new List<Element>();
         public static List<ElementId> idList;
 
@@ -107,6 +74,7 @@ namespace GeoAddin.Openings_Windows
                 .ToList();
             //elementsInView = (List<Element>)docCollector.ToElements();
 
+            progress_pb.Visible = false;
 
 
             //прикручиваю обработчик событий для всех комбобоксов из catgroup//
@@ -324,15 +292,15 @@ namespace GeoAddin.Openings_Windows
             return el;
         }
 
-        static List<string> getParamNames(List<Parameter> recievedParam) //задуматься над тем, чтобы здесь же составлять результирующий лист с выборкой общих параметров
+        static List<string> getParamNames(List<Autodesk.Revit.DB.Parameter> recievedParam) //задуматься над тем, чтобы здесь же составлять результирующий лист с выборкой общих параметров
         {
             List<string> nameList = new List<string>();
-            parameter = new List<Parameter>();
+            parameter = new List<Autodesk.Revit.DB.Parameter>();
 
             paramNamesAndTypes = new string[recievedParam.Count, 2];
             int i = 0;
 
-            foreach (Parameter param in recievedParam)
+            foreach (Autodesk.Revit.DB.Parameter param in recievedParam)
             {
                 try //не у всех параметров есть безопасно возвращаемое "имя", такие параметры нас не интересуют
                 {
@@ -356,8 +324,8 @@ namespace GeoAddin.Openings_Windows
 
         static string getParamValue(string name, Element element)
         {
-            Parameter parameter = null;
-            foreach (Parameter param in element.Parameters) if (param.Definition.Name.ToString() == name) parameter = param;
+            Autodesk.Revit.DB.Parameter parameter = null;
+            foreach (Autodesk.Revit.DB.Parameter param in element.Parameters) if (param.Definition.Name.ToString() == name) parameter = param;
             var storage_type = parameter.StorageType;
 
             switch(storage_type)
@@ -500,6 +468,10 @@ namespace GeoAddin.Openings_Windows
             result_DGV.Columns.Add("ID", "ID");
             result_DGV.Columns.Add("Cat", "Category");
             result_DGV.Columns.Add("Name", "Name");
+            progress_pb.Visible = true;
+            progress_pb.Value = 0;
+            progress_pb.Maximum = roughSample.Count;
+
             //временный блок
             if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
             for (int i = 1; i <= ruleCount; i++)
@@ -509,7 +481,7 @@ namespace GeoAddin.Openings_Windows
             idList = new List<ElementId>(); //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
 
             foreach (var el in roughSample)
-            {       
+            {       progress_pb.Value++;
                         try
                         {
                             //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
@@ -532,7 +504,8 @@ namespace GeoAddin.Openings_Windows
             }
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
 
-            if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;   
+            if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;
+            progress_pb.Visible = false;
         }
 
 
@@ -557,5 +530,79 @@ namespace GeoAddin.Openings_Windows
                         break;
                 }
         }
+
+        private void saveDGV_bt_Click(object sender, EventArgs e)
+        {
+            if (result_DGV.Rows.Count >= 1)
+            {
+                getPath_sfd.FileName = "ElSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy hh.mm.ss");
+                getPath_sfd.AddExtension = true;
+                getPath_sfd.DefaultExt = "xlsx";
+                getPath_sfd.ShowDialog();
+
+                if (getPath_sfd.ShowDialog() == DialogResult.OK)
+                {
+                    result_DGV.SelectAll();
+                    DataObject dataObj = result_DGV.GetClipboardContent();
+                    if (dataObj != null)
+                        Clipboard.SetDataObject(dataObj);
+
+                    object misValue = System.Reflection.Missing.Value;
+
+                    Microsoft.Office.Interop.Excel.Application exApp = new Microsoft.Office.Interop.Excel.Application();
+                    Microsoft.Office.Interop.Excel.Workbook workbook = exApp.Workbooks.Add(misValue);
+                    Microsoft.Office.Interop.Excel.Worksheet worksheet = workbook.Worksheets.Add();
+                    Microsoft.Office.Interop.Excel.Range range = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[1, 1];
+                    range.Select();
+                    worksheet.PasteSpecial(range, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, true);
+                    workbook.SaveAs(getPath_sfd.FileName, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                    workbook.Close(true, misValue, misValue);
+                    exApp.Quit();
+                    Clipboard.Clear();
+                    result_DGV.ClearSelection();
+                }
+
+
+
+            }
+
+
+        }
     }
+
+    public class EventRegHandler : IExternalEventHandler
+    {
+        public bool EventRegistered { get; set; }
+        public void Execute(UIApplication app) //внедрение новых действий осуществлять здесь, основной класс просто ссылается на этот
+        {
+            if (OpeningWin_ElementSelection.actionType != "" && OpeningWin_ElementSelection.actionType != "Done")
+                using (Transaction t = new Transaction(OpeningWin_ElementSelection.doc, "Действие над выделенными элементами"))
+                {
+                    t.Start();
+                    switch (OpeningWin_ElementSelection.actionType)
+                    {
+                        case "Скрыть":
+                            OpeningWin_ElementSelection.doc.ActiveView.HideElements(OpeningWin_ElementSelection.idList);
+                            break;
+                        case "Показать все":
+                            OpeningWin_ElementSelection.doc.ActiveView.UnhideElements(OpeningWin_ElementSelection.idList);
+                            break;
+                        case "Удалить":
+                            OpeningWin_ElementSelection.doc.Delete(OpeningWin_ElementSelection.idList);
+                            break;
+                    }
+
+                    t.Commit();
+                    OpeningWin_ElementSelection.actionType = "Done";
+                }
+
+        }
+
+
+        public string GetName()
+        {
+            return "EventRegHandler";
+        }
+    }
+
 }
