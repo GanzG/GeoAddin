@@ -364,7 +364,6 @@ namespace GeoAddin.Openings_Windows
 
                 default: return "None";
             }
-
         }
 
 
@@ -428,19 +427,22 @@ namespace GeoAddin.Openings_Windows
             {
                 if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "" && (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
                 {
-                    //MessageBox.Show("Внутрянка");
                     paramName = (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
-                    storageType = paramNamesAndTypes[Array.IndexOf(paramNamesAndTypes, paramName), 1];
 
+                    int index = -1;
+                    for (int j = 0; j < paramNamesAndTypes.Length / 2; j++)
+                        if (paramNamesAndTypes[j, 0] == paramName) index = j; //изначально было Array.IndexOf, но оно не отрабатывало. Подумать над оптимальным решением
+
+                    storageType = paramNamesAndTypes[index, 1];
                     value = getParamValue(paramName, element);
+
                     double doubleValue = 0;
                     double doubleSourceValue = 0;
                     string rule = (ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
-                    MessageBox.Show(storageType);
+
                     switch (storageType)
                     {
                         case "String":
-                            MessageBox.Show(value + " | " + (ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text);
                             if (rule == "Равен" && value == (ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text)
                                 checkRuleCount++;
                             break;
@@ -449,16 +451,10 @@ namespace GeoAddin.Openings_Windows
                             break;
 
                         default:
-
-                            MessageBox.Show((Convert.ToDouble(value)).ToString() + " | " + Convert.ToDouble((ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text).ToString());
-
                             if (Double.TryParse(value, out doubleValue) && Double.TryParse((ParamGroup.Controls["ruleValue_" + i + "_tb"] as System.Windows.Forms.TextBox).Text, out doubleSourceValue))
 
-                            {
-                                MessageBox.Show(doubleValue.ToString() + " | " + doubleSourceValue.ToString());
                                 if (((rule == "Равен" && doubleValue == doubleSourceValue) || (rule == "Больше" && doubleValue > doubleSourceValue) || (rule == "Меньше" && doubleValue < doubleSourceValue)))
                                     checkRuleCount++;
-                            }
                             break;
 
                     }
@@ -478,8 +474,6 @@ namespace GeoAddin.Openings_Windows
                     if (checkRuleCount >= 1) res = true;
                     break;
             }
-
-            //if ((ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text == "")
 
             return res;
         }
@@ -502,17 +496,10 @@ namespace GeoAddin.Openings_Windows
                 result_DGV.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
             //конец временного блока 
 
-            idList = new List<ElementId>(); 
-                                                            //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
+            idList = new List<ElementId>(); //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
 
             foreach (var el in roughSample)
-            {
-
-
-
-
-                //if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
-                    
+            {       
                     for (int i = 1; i <= ruleCount; i++)
                     {
                         try
