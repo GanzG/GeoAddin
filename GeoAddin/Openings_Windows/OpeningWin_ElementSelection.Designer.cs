@@ -80,10 +80,12 @@
             this.rule_rb = new System.Windows.Forms.RadioButton();
             this.cat_rb = new System.Windows.Forms.RadioButton();
             this.getPath_sfd = new System.Windows.Forms.SaveFileDialog();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
             this.mainGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
             // close_bt
@@ -99,8 +101,9 @@
             // 
             // result_DGV
             // 
+            this.result_DGV.AllowUserToAddRows = false;
             this.result_DGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.result_DGV.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.result_DGV.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.result_DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.result_DGV.Location = new System.Drawing.Point(10, 48);
             this.result_DGV.Name = "result_DGV";
@@ -600,6 +603,11 @@
             // 
             this.getPath_sfd.Filter = "Таблица Excel | *.xlsx";
             // 
+            // fileSystemWatcher1
+            // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
             // OpeningWin_ElementSelection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -621,6 +629,7 @@
             this.ParamGroup.PerformLayout();
             this.mainGroup.ResumeLayout(false);
             this.mainGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -680,5 +689,6 @@
         private System.Windows.Forms.ComboBox action_ComBox;
         private System.Windows.Forms.ProgressBar progress_pb;
         private System.Windows.Forms.SaveFileDialog getPath_sfd;
+        private System.IO.FileSystemWatcher fileSystemWatcher1;
     }
 }

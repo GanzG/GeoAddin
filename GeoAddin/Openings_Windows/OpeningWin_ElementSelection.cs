@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autodesk.Revit.Attributes;
@@ -102,6 +103,8 @@ namespace GeoAddin.Openings_Windows
 
 
         }
+
+
 
 
 
@@ -448,7 +451,7 @@ namespace GeoAddin.Openings_Windows
             result_DGV.Columns.Clear();
             result_DGV.Refresh();
             result_DGV.Columns.Add("ID", "ID");
-            result_DGV.Columns.Add("Cat", "Category");
+            result_DGV.Columns.Add("Category", "Category");
             result_DGV.Columns.Add("Name", "Name");
             progress_pb.Visible = true;
             progress_pb.Value = 0;
@@ -486,6 +489,7 @@ namespace GeoAddin.Openings_Windows
             }
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
 
+
             if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;
             progress_pb.Visible = false;
         }
@@ -515,28 +519,65 @@ namespace GeoAddin.Openings_Windows
 
         private void saveDGV_bt_Click(object sender, EventArgs e)
         {
+            Thread exportThread = new Thread(new ThreadStart(Export));
+            exportThread.Start();
+        }
+
+        private void Export()
+        {
+            
             if (result_DGV.Rows.Count >= 1)
             {
                 getPath_sfd.FileName = "ElSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss");
                 getPath_sfd.AddExtension = true;
                 getPath_sfd.DefaultExt = "xlsx";
-                getPath_sfd.ShowDialog();
 
-                if (getPath_sfd.ShowDialog() == DialogResult.OK)
+                DialogResult dialogResult = DialogResult.None;
+                this.Invoke(new Action(() =>
                 {
+                    //getPath_sfd.ShowDialog();
+                    if (getPath_sfd.ShowDialog() == DialogResult.OK) dialogResult = DialogResult.OK;
+
+                })); 
+                //это запуск немодального окна, его необходимо выполнить в рамках основного потока. Invoke выполняет это действие "от лица" основного потока
+                
+                if (dialogResult == DialogResult.OK)
+                {
+                    progress_pb.Visible = true;
+                    progress_pb.Value = 0;
+                    progress_pb.Maximum = result_DGV.ColumnCount + result_DGV.Rows.Count * result_DGV.ColumnCount;
                     IXLWorkbook xls_table = new XLWorkbook();
                     IXLWorksheet xls_sheet = xls_table.Worksheets.Add(doc.Title);
 
                     for (int i = 0; i < result_DGV.ColumnCount; i++)
-                        xls_sheet.Cell(1, 1+i).Value = result_DGV.Columns[i].Name;
+                    {
+                        xls_sheet.Cell(1, 1 + i).Value = result_DGV.Columns[i].Name;
+                        xls_sheet.Cell(1, 1 + i).Style.Fill.BackgroundColor = XLColor.Peach;
+                        progress_pb.Value++;
+                    }
+                    XLColor cellColor = XLColor.MediumAquamarine;
 
                     for (int i = 0; i <= result_DGV.Rows.Count - 1; i++)
-                        for (int j = 0; j < result_DGV.ColumnCount; j++)
-                            xls_sheet.Cell(2 + i, 1 + j).Value = result_DGV.Rows[i].Cells[j].Value;
+                    {
+                        if ((i > 0) && (result_DGV.Rows[i].Cells["Category"].Value.ToString() != result_DGV.Rows[i - 1].Cells["Category"].Value.ToString()))
+                        {
+                            if (cellColor == XLColor.MediumAquamarine) cellColor = XLColor.LightBlue;
+                            else cellColor = XLColor.MediumAquamarine;
+                        }
 
-                    xls_sheet.Columns().AdjustToContents();
-                    xls_table.SaveAs(getPath_sfd.FileName);
+                        for (int j = 0; j < result_DGV.ColumnCount; j++)
+                        {
+                            xls_sheet.Cell(2 + i, 1 + j).Value = result_DGV.Rows[i].Cells[j].Value;
+                            xls_sheet.Cell(2 + i, 1 + j).Style.Fill.BackgroundColor = cellColor;
+                            progress_pb.Value++;
+                        }
                     }
+
+                    progress_pb.Visible = false;
+                    xls_sheet.Columns().AdjustToContents();
+                    xls_sheet.Columns().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    xls_table.SaveAs(getPath_sfd.FileName);
+                }
             }
         }
     }
