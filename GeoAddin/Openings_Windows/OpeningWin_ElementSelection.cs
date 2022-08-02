@@ -9,6 +9,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
+using System.Diagnostics;
 using System.IO;
 using ClosedXML.Excel;
 
@@ -231,7 +232,6 @@ namespace GeoAddin.Openings_Windows
             generalParameters(); //суть войда в том, чтобы обновить и составить актуальный список общих параметров
 
             Task.Factory.StartNew(roughSampling); //возможно, точка вызова будет меняться
-
         }
 
         private void ruleSelectControl(object sender, EventArgs e) //для контроля соответствия условия типу параметра
@@ -265,7 +265,6 @@ namespace GeoAddin.Openings_Windows
                     ruleBox.Items.Add("Меньше");
                     break;
             }
-
         }
 
         static Element findElement(string name) //модуль находит и возвращает элемент из листа коллектора по его названию
@@ -296,7 +295,6 @@ namespace GeoAddin.Openings_Windows
                     paramNamesAndTypes[i, 0] = param.Definition.Name.ToString();
                     paramNamesAndTypes[i, 1] = param.StorageType.ToString();
                     i++;
-                    //MessageBox.Show(param.StorageType.ToString());
                     //------//
 
                 }
@@ -442,7 +440,6 @@ namespace GeoAddin.Openings_Windows
         }
 
 
-
         private void result_bt_Click(object sender, EventArgs e)
         {
             //MessageBox.Show(ruleCount.ToString());
@@ -519,8 +516,11 @@ namespace GeoAddin.Openings_Windows
 
         private void saveDGV_bt_Click(object sender, EventArgs e)
         {
-            Thread exportThread = new Thread(new ThreadStart(Export));
-            exportThread.Start();
+            //Thread exportThread = new Thread(new ThreadStart(Export));
+            //exportThread.Start();
+
+            Task.Factory.StartNew(Export);
+
         }
 
         private void Export()
@@ -577,6 +577,9 @@ namespace GeoAddin.Openings_Windows
                     xls_sheet.Columns().AdjustToContents();
                     xls_sheet.Columns().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
                     xls_table.SaveAs(getPath_sfd.FileName);
+
+                    Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
+
                 }
             }
         }
