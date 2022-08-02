@@ -1,39 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-//using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-//using System.Windows.Shapes;
-using RevitServices.Persistence;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
 using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
 using System.IO;
+using ClosedXML.Excel;
 
 
 
 namespace GeoAddin.Openings_Windows
 {
     [Transaction(TransactionMode.Manual)]
-
-    
-
     public partial class OpeningWin_ElementSelection : System.Windows.Forms.Form
     {
         public UIDocument uidoc;
@@ -535,38 +517,27 @@ namespace GeoAddin.Openings_Windows
         {
             if (result_DGV.Rows.Count >= 1)
             {
-                getPath_sfd.FileName = "ElSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy hh.mm.ss");
+                getPath_sfd.FileName = "ElSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss");
                 getPath_sfd.AddExtension = true;
                 getPath_sfd.DefaultExt = "xlsx";
                 getPath_sfd.ShowDialog();
 
                 if (getPath_sfd.ShowDialog() == DialogResult.OK)
                 {
-                    result_DGV.SelectAll();
-                    DataObject dataObj = result_DGV.GetClipboardContent();
-                    if (dataObj != null)
-                        Clipboard.SetDataObject(dataObj);
+                    IXLWorkbook xls_table = new XLWorkbook();
+                    IXLWorksheet xls_sheet = xls_table.Worksheets.Add(doc.Title);
 
-                    object misValue = System.Reflection.Missing.Value;
+                    for (int i = 0; i < result_DGV.ColumnCount; i++)
+                        xls_sheet.Cell(1, 1+i).Value = result_DGV.Columns[i].Name;
 
-                    Microsoft.Office.Interop.Excel.Application exApp = new Microsoft.Office.Interop.Excel.Application();
-                    Microsoft.Office.Interop.Excel.Workbook workbook = exApp.Workbooks.Add(misValue);
-                    Microsoft.Office.Interop.Excel.Worksheet worksheet = workbook.Worksheets.Add();
-                    Microsoft.Office.Interop.Excel.Range range = (Microsoft.Office.Interop.Excel.Range)worksheet.Cells[1, 1];
-                    range.Select();
-                    worksheet.PasteSpecial(range, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, true);
-                    workbook.SaveAs(getPath_sfd.FileName, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-                    workbook.Close(true, misValue, misValue);
-                    exApp.Quit();
-                    Clipboard.Clear();
-                    result_DGV.ClearSelection();
-                }
+                    for (int i = 0; i <= result_DGV.Rows.Count - 1; i++)
+                        for (int j = 0; j < result_DGV.ColumnCount; j++)
+                            xls_sheet.Cell(2 + i, 1 + j).Value = result_DGV.Rows[i].Cells[j].Value;
 
-
-
+                    xls_sheet.Columns().AdjustToContents();
+                    xls_table.SaveAs(getPath_sfd.FileName);
+                    }
             }
-
-
         }
     }
 
