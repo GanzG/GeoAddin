@@ -516,8 +516,6 @@ namespace GeoAddin.Openings_Windows
 
         private void saveDGV_bt_Click(object sender, EventArgs e)
         {
-            //Thread exportThread = new Thread(new ThreadStart(Export));
-            //exportThread.Start();
 
             Task.Factory.StartNew(Export);
 
@@ -583,6 +581,60 @@ namespace GeoAddin.Openings_Windows
                 }
             }
         }
+
+
+
+        private void loadDGV_bt_Click(object sender, EventArgs e)
+        {
+            Task.Factory.StartNew(Import);
+
+        }
+        private void Import()
+        {
+
+            DialogResult dialogResult = DialogResult.None;
+            openFile_ofd.Filter = "Excel файлы (*.xlsx)|*.xlsx";
+            bool check = false;
+            this.Invoke(new Action(() =>
+            {
+                if (openFile_ofd.ShowDialog() == DialogResult.OK) dialogResult = DialogResult.OK;
+
+            }));
+
+            if (dialogResult == DialogResult.OK)
+            {
+                var excelFile = new XLWorkbook(openFile_ofd.FileName);
+                var workSheet = excelFile.Worksheet(1);
+
+                if (workSheet.Name != doc.Title)
+                    if (MessageBox.Show("Таблица, вероятно, не является выгруженной из текущего документа Revit. Все равно загрузить?", "Несоответствие наименований", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        Thread.ResetAbort();
+
+                if (MessageBox.Show("Проверить элементы на соответствие текущему документу?", "Проверка соответствия", MessageBoxButtons.YesNo) == DialogResult.OK)
+                    check = true;
+
+                result_DGV.Rows.Clear();
+                result_DGV.Columns.Clear();
+                result_DGV.Refresh();
+
+
+                for (int i = 1; i <= workSheet.ColumnsUsed().Count(); i++)
+                    result_DGV.Columns.Add(workSheet.Cell(1, i).Value.ToString(), workSheet.Cell(1, i).Value.ToString());
+
+                for (int i = 2; i <= workSheet.RowsUsed().Count(); i++)
+                {
+                    int row = result_DGV.Rows.Add();
+                    for (int j = 1; j <= workSheet.ColumnsUsed().Count(); j++)
+                    {
+                        result_DGV.Rows[row].Cells[j - 1].Value = workSheet.Cell(i, j).Value.ToString();
+                    }
+                }
+
+            }
+
+
+        }
+
     }
 
     public class EventRegHandler : IExternalEventHandler

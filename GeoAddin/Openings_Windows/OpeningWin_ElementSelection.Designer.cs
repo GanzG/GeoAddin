@@ -81,6 +81,7 @@
             this.cat_rb = new System.Windows.Forms.RadioButton();
             this.getPath_sfd = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.openFile_ofd = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
@@ -464,6 +465,7 @@
             this.loadDGV_bt.TabIndex = 12;
             this.loadDGV_bt.Text = "Загрузить выборку";
             this.loadDGV_bt.UseVisualStyleBackColor = true;
+            this.loadDGV_bt.Click += new System.EventHandler(this.loadDGV_bt_Click);
             // 
             // label7
             // 
@@ -690,5 +692,6 @@
         private System.Windows.Forms.ProgressBar progress_pb;
         private System.Windows.Forms.SaveFileDialog getPath_sfd;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.OpenFileDialog openFile_ofd;
     }
 }
