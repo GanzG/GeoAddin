@@ -80,13 +80,12 @@
             this.rule_rb = new System.Windows.Forms.RadioButton();
             this.cat_rb = new System.Windows.Forms.RadioButton();
             this.getPath_sfd = new System.Windows.Forms.SaveFileDialog();
-            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.openFile_ofd = new System.Windows.Forms.OpenFileDialog();
+            this.timeLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
             this.mainGroup.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
             // close_bt
@@ -569,6 +568,7 @@
             this.progress_pb.Name = "progress_pb";
             this.progress_pb.Size = new System.Drawing.Size(100, 23);
             this.progress_pb.TabIndex = 49;
+            this.progress_pb.Tag = "";
             // 
             // action_ComBox
             // 
@@ -605,16 +605,20 @@
             // 
             this.getPath_sfd.Filter = "Таблица Excel | *.xlsx";
             // 
-            // fileSystemWatcher1
+            // timeLabel
             // 
-            this.fileSystemWatcher1.EnableRaisingEvents = true;
-            this.fileSystemWatcher1.SynchronizingObject = this;
+            this.timeLabel.AutoSize = true;
+            this.timeLabel.Location = new System.Drawing.Point(13, 595);
+            this.timeLabel.Name = "timeLabel";
+            this.timeLabel.Size = new System.Drawing.Size(0, 13);
+            this.timeLabel.TabIndex = 50;
             // 
             // OpeningWin_ElementSelection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 609);
+            this.Controls.Add(this.timeLabel);
             this.Controls.Add(this.mainGroup);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -631,7 +635,6 @@
             this.ParamGroup.PerformLayout();
             this.mainGroup.ResumeLayout(false);
             this.mainGroup.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -691,7 +694,7 @@
         private System.Windows.Forms.ComboBox action_ComBox;
         private System.Windows.Forms.ProgressBar progress_pb;
         private System.Windows.Forms.SaveFileDialog getPath_sfd;
-        private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.OpenFileDialog openFile_ofd;
+        private System.Windows.Forms.Label timeLabel;
     }
 }

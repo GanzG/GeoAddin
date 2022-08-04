@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -533,11 +534,10 @@ namespace GeoAddin.Openings_Windows
                 DialogResult dialogResult = DialogResult.None;
                 this.Invoke(new Action(() =>
                 {
-                    //getPath_sfd.ShowDialog();
                     if (getPath_sfd.ShowDialog() == DialogResult.OK) dialogResult = DialogResult.OK;
 
                 })); 
-                //это запуск немодального окна, его необходимо выполнить в рамках основного потока. Invoke выполняет это действие "от лица" основного потока
+                //запуск немодального окна необходимо выполнить в рамках основного потока
                 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -586,8 +586,12 @@ namespace GeoAddin.Openings_Windows
 
         private void loadDGV_bt_Click(object sender, EventArgs e)
         {
-            Task.Factory.StartNew(Import);
+            //Task.Factory.StartNew(Import);
+            //Task отрабатывает некорректно
 
+            Thread import = new Thread(Import);
+            import.Start();
+            //Надо не забыть починить скроллбар
         }
         private void Import()
         {
@@ -617,18 +621,44 @@ namespace GeoAddin.Openings_Windows
                 result_DGV.Columns.Clear();
                 result_DGV.Refresh();
 
+                int rowsUsed = workSheet.RowsUsed().Count();
+                int columnsUsed = workSheet.ColumnsUsed().Count();
+                DataTable localTable = new DataTable();
 
-                for (int i = 1; i <= workSheet.ColumnsUsed().Count(); i++)
-                    result_DGV.Columns.Add(workSheet.Cell(1, i).Value.ToString(), workSheet.Cell(1, i).Value.ToString());
+                progress_pb.Value = 0;
+                progress_pb.Maximum = rowsUsed;
 
-                for (int i = 2; i <= workSheet.RowsUsed().Count(); i++)
+
+                for (int i = 1; i <= columnsUsed; i++)
+                    localTable.Columns.Add(workSheet.Cell(1, i).Value.ToString());             
+
+                progress_pb.Visible = true;
+
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
+                for (int i = 2; i <= rowsUsed; i++)
                 {
-                    int row = result_DGV.Rows.Add();
-                    for (int j = 1; j <= workSheet.ColumnsUsed().Count(); j++)
-                    {
-                        result_DGV.Rows[row].Cells[j - 1].Value = workSheet.Cell(i, j).Value.ToString();
-                    }
+                    progress_pb.Value++;
+                    DataRow row = localTable.NewRow();
+                    for (int j = 1; j <= columnsUsed; j++) 
+                        row[j-1] = workSheet.Cell(i, j).Value.ToString();
+
+                    localTable.Rows.Add(row);
                 }
+
+                result_DGV.DataSource = localTable;
+                sw.Stop();
+
+                timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс.";
+
+                localTable = null;
+                workSheet = null;
+                excelFile.Dispose();
+
+                progress_pb.Visible = false;
+
+
 
             }
 
