@@ -26,6 +26,8 @@ namespace GeoAddin.Openings_Windows
         public UIApplication uiapp;
         public RevitApplication app;
 
+        Stopwatch sw;
+
         //public bool threadState = true;
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public int ruleCount = 1;
@@ -443,49 +445,63 @@ namespace GeoAddin.Openings_Windows
 
         private void result_bt_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(ruleCount.ToString());
+            DataTable localTable = new DataTable();       
             
             result_DGV.Rows.Clear();
             result_DGV.Columns.Clear();
             result_DGV.Refresh();
-            result_DGV.Columns.Add("ID", "ID");
-            result_DGV.Columns.Add("Category", "Category");
-            result_DGV.Columns.Add("Name", "Name");
+
+            localTable.Columns.Add("ID");
+            localTable.Columns.Add("Category");
+            localTable.Columns.Add("Name");
+
             progress_pb.Visible = true;
             progress_pb.Value = 0;
             progress_pb.Maximum = roughSample.Count;
 
             //временный блок
             if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
-            for (int i = 1; i <= ruleCount; i++)
-                result_DGV.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
+                for (int i = 1; i <= ruleCount; i++)
+                    localTable.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
+
             //конец временного блока 
 
             idList = new List<ElementId>(); //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
+ 
+
+            sw = new Stopwatch();
+            sw.Start();
 
             foreach (var el in roughSample)
-            {       progress_pb.Value++;
-                        try
-                        {
-                            //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
-                            //возможно, что размером в мм является все, что хранится в double
+            {       
+                progress_pb.Value++;
+                try
+                {
+                    //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
+                    //возможно, что размером в мм является все, что хранится в double
                             
-                            if (checkRules(el))
-                            {
-                                int row = result_DGV.Rows.Add();
-                                result_DGV.Rows[row].Cells[0].Value = el.Id.ToString();
-                                idList.Add(el.Id);
-                                result_DGV.Rows[row].Cells[1].Value = el.Category.Name.ToString();
-                                result_DGV.Rows[row].Cells[2].Value = el.Name.ToString();
+                if (checkRules(el))
+                {
+                    DataRow row = localTable.NewRow();
+                    row[0] = el.Id.ToString();
+                    row[1] = el.Category.Name.ToString();
+                    row[2] = el.Name.ToString();
 
-                            for (int i = 1; i <= ruleCount; i++) 
-                            result_DGV.Rows[row].Cells[(ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text].Value = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
 
-                            }
-                        }
-                        catch { }
+                for (int i = 1; i <= ruleCount; i++) 
+                    row[2+i] = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
+                
+                localTable.Rows.Add(row);
+                }
+
+                }
+                catch { }
             }
+            result_DGV.DataSource = localTable;
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
+
+            sw.Stop();
+            timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс. на " + result_DGV.Rows.Count.ToString() + " элементов с " + result_DGV.ColumnCount.ToString() + " параметрами вывода";
 
 
             if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;
@@ -541,6 +557,9 @@ namespace GeoAddin.Openings_Windows
                 
                 if (dialogResult == DialogResult.OK)
                 {
+                    sw = new Stopwatch();
+                    sw.Start();
+
                     progress_pb.Visible = true;
                     progress_pb.Value = 0;
                     progress_pb.Maximum = result_DGV.ColumnCount + result_DGV.Rows.Count * result_DGV.ColumnCount;
@@ -571,10 +590,15 @@ namespace GeoAddin.Openings_Windows
                         }
                     }
 
+
+
                     progress_pb.Visible = false;
                     xls_sheet.Columns().AdjustToContents();
                     xls_sheet.Columns().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
                     xls_table.SaveAs(getPath_sfd.FileName);
+
+                    sw.Stop();
+                    timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс.";
 
                     Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
 
@@ -586,9 +610,6 @@ namespace GeoAddin.Openings_Windows
 
         private void loadDGV_bt_Click(object sender, EventArgs e)
         {
-            //Task.Factory.StartNew(Import);
-            //Task отрабатывает некорректно
-
             Thread import = new Thread(Import);
             import.Start();
             //Надо не забыть починить скроллбар
@@ -607,6 +628,10 @@ namespace GeoAddin.Openings_Windows
 
             if (dialogResult == DialogResult.OK)
             {
+                result_DGV.Rows.Clear();
+                result_DGV.Columns.Clear();
+                result_DGV.Refresh();
+
                 var excelFile = new XLWorkbook(openFile_ofd.FileName);
                 var workSheet = excelFile.Worksheet(1);
 
@@ -634,7 +659,7 @@ namespace GeoAddin.Openings_Windows
 
                 progress_pb.Visible = true;
 
-                Stopwatch sw = new Stopwatch();
+                sw = new Stopwatch();
                 sw.Start();
 
                 for (int i = 2; i <= rowsUsed; i++)
@@ -648,8 +673,8 @@ namespace GeoAddin.Openings_Windows
                 }
 
                 result_DGV.DataSource = localTable;
-                sw.Stop();
 
+                sw.Stop();
                 timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс.";
 
                 localTable = null;
