@@ -659,10 +659,6 @@ namespace GeoAddin.Openings_Windows
 
             if (dialogResult == DialogResult.OK)
             {
-                result_DGV.Rows.Clear();
-                result_DGV.Columns.Clear();
-                result_DGV.Refresh();
-
                 var excelFile = new XLWorkbook(openFile_ofd.FileName);
                 var workSheet = excelFile.Worksheet(1);
 
@@ -673,8 +669,6 @@ namespace GeoAddin.Openings_Windows
                 if (MessageBox.Show("Проверить элементы на соответствие текущему документу?", "Проверка соответствия", MessageBoxButtons.YesNo) == DialogResult.OK)
                     check = true;
 
-                result_DGV.Rows.Clear();
-                result_DGV.Columns.Clear();
                 result_DGV.Refresh();
 
                 int rowsUsed = workSheet.RowsUsed().Count();
@@ -683,7 +677,6 @@ namespace GeoAddin.Openings_Windows
 
                 progress_pb.Value = 0;
                 progress_pb.Maximum = rowsUsed;
-
 
                 for (int i = 1; i <= columnsUsed; i++)
                     localTable.Columns.Add(workSheet.Cell(1, i).Value.ToString());             
@@ -703,6 +696,7 @@ namespace GeoAddin.Openings_Windows
                     localTable.Rows.Add(row);
                 }
 
+                MessageBox.Show("Список успешно загружен."); //смешно, но надо понять, почему без этого не работает
                 result_DGV.DataSource = localTable;
 
                 sw.Stop();
@@ -713,17 +707,25 @@ namespace GeoAddin.Openings_Windows
                 excelFile.Dispose();
 
                 progress_pb.Visible = false;
-
-
-
             }
-
-
         }
 
         private void addToResult_bt_Click(object sender, EventArgs e)
         {
             result("modify_bt");
+        }
+
+        private void clearAll_bt_Click(object sender, EventArgs e)
+        {
+            //foreach (var ComBox in ParamGroup.Controls.OfType<System.Windows.Forms.ComboBox>())
+            //    ComBox.Text = "";
+
+            while (ruleCount > 1) addDelControl("del", "param");
+
+            foreach (var TB in ParamGroup.Controls.OfType<System.Windows.Forms.TextBox>())
+                TB.Text = "";
+
+            param_1_ComBox.Text = "";
         }
     }
 

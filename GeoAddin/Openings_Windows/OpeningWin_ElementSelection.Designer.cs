@@ -444,6 +444,7 @@
             this.clearAll_bt.TabIndex = 10;
             this.clearAll_bt.Text = "Очистить фильтр";
             this.clearAll_bt.UseVisualStyleBackColor = true;
+            this.clearAll_bt.Click += new System.EventHandler(this.clearAll_bt_Click);
             // 
             // saveDGV_bt
             // 
