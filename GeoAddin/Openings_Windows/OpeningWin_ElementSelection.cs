@@ -426,7 +426,8 @@ namespace GeoAddin.Openings_Windows
                     }
 
                 }
-                else if ((ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text == "") res = true;
+                else if ((ParamGroup.Controls["rule_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text == "") 
+                    res = true;
             }
 
             switch(relationship) //число выполненных правил сопоставляется с их количеством в зависимости от отношений между ними
@@ -445,12 +446,12 @@ namespace GeoAddin.Openings_Windows
 
         private void result_bt_Click(object sender, EventArgs e)
         {
-            DataTable localTable = new DataTable();       
-            
-            result_DGV.Rows.Clear();
-            result_DGV.Columns.Clear();
+
+            if (result_DGV.Rows.Count > 0) result_DGV.Rows.Clear();
+            if (result_DGV.Columns.Count > 0) result_DGV.Columns.Clear();
             result_DGV.Refresh();
 
+            DataTable localTable = new DataTable();
             localTable.Columns.Add("ID");
             localTable.Columns.Add("Category");
             localTable.Columns.Add("Name");
@@ -463,11 +464,8 @@ namespace GeoAddin.Openings_Windows
             if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
                 for (int i = 1; i <= ruleCount; i++)
                     localTable.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
-
-            //конец временного блока 
-
+            //конец временного блока ,
             idList = new List<ElementId>(); //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
- 
 
             sw = new Stopwatch();
             sw.Start();
@@ -480,26 +478,31 @@ namespace GeoAddin.Openings_Windows
                     //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
                     //возможно, что размером в мм является все, что хранится в double
                             
-                if (checkRules(el))
+                    if (checkRules(el))
+                    {
+                        DataRow row = localTable.NewRow();
+                        row[0] = el.Id.ToString();
+                        row[1] = el.Category.Name.ToString();
+                        row[2] = el.Name.ToString();
+
+                        idList.Add(el.Id);
+
+                        for (int i = 1; i <= ruleCount; i++)
+                            if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+                                row[2 + i] = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
+
+                        localTable.Rows.Add(row);
+
+                    }
+
+                }
+                catch (Exception ex) 
                 {
-                    DataRow row = localTable.NewRow();
-                    row[0] = el.Id.ToString();
-                    row[1] = el.Category.Name.ToString();
-                    row[2] = el.Name.ToString();
-
-
-                for (int i = 1; i <= ruleCount; i++) 
-                    row[2+i] = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
-                
-                localTable.Rows.Add(row);
+                    MessageBox.Show(ex.Message);
                 }
-
-                }
-                catch { }
             }
             result_DGV.DataSource = localTable;
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
-
             sw.Stop();
             timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс. на " + result_DGV.Rows.Count.ToString() + " элементов с " + result_DGV.ColumnCount.ToString() + " параметрами вывода";
 
