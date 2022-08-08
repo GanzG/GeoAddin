@@ -444,41 +444,53 @@ namespace GeoAddin.Openings_Windows
         }
 
 
-        private void result_bt_Click(object sender, EventArgs e)
+
+        private void result(string sender)
         {
-
-            if (result_DGV.Rows.Count > 0) result_DGV.Rows.Clear();
-            if (result_DGV.Columns.Count > 0) result_DGV.Columns.Clear();
-            result_DGV.Refresh();
-
             DataTable localTable = new DataTable();
-            localTable.Columns.Add("ID");
-            localTable.Columns.Add("Category");
-            localTable.Columns.Add("Name");
+
+            if (sender == "result_bt")
+            {
+                result_DGV.Refresh();
+                localTable.Columns.Add("ID"); 
+                localTable.Columns.Add("Category");
+                localTable.Columns.Add("Name");
+
+                localTable.PrimaryKey = new DataColumn[] { localTable.Columns["ID"] };
+
+                if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+                    for (int i = 1; i <= ruleCount; i++)
+                        localTable.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
+            }
+
+            if (sender == "modify_bt")
+            {
+                localTable = (DataTable)result_DGV.DataSource;
+                for (int i = 1; i <= ruleCount; i++)
+                {
+                    if (localTable.Columns.Contains((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text) == false && (ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
+                        localTable.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
+                }
+            }
 
             progress_pb.Visible = true;
             progress_pb.Value = 0;
             progress_pb.Maximum = roughSample.Count;
 
-            //временный блок
-            if ((ParamGroup.Controls["param_1_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
-                for (int i = 1; i <= ruleCount; i++)
-                    localTable.Columns.Add((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
-            //конец временного блока ,
             idList = new List<ElementId>(); //либо получать elementid из первого столбца dgv - думаю, более жизнеспособный подход, чем плодить переменные
 
             sw = new Stopwatch();
             sw.Start();
 
             foreach (var el in roughSample)
-            {       
+            {
                 progress_pb.Value++;
                 try
                 {
                     //высота в ревите представлена в мм, а выводится в футах. Надо подумать, где стоит конвертировать, а где нет
                     //возможно, что размером в мм является все, что хранится в double
-                            
-                    if (checkRules(el))
+
+                    if (localTable.Rows.Contains(el.Id.ToString()) == false && checkRules(el))
                     {
                         DataRow row = localTable.NewRow();
                         row[0] = el.Id.ToString();
@@ -489,16 +501,24 @@ namespace GeoAddin.Openings_Windows
 
                         for (int i = 1; i <= ruleCount; i++)
                             if ((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "")
-                                row[2 + i] = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
+                                try
+                                {
+
+                                    row[2 + i] = getParamValue((ParamGroup.Controls["param_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text, el);
+                                }
+                                catch
+                                {
+                                    row[2 + i] = "Error";
+                                }
 
                         localTable.Rows.Add(row);
 
                     }
 
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Source + " - " + ex.Message);
                 }
             }
             result_DGV.DataSource = localTable;
@@ -509,6 +529,14 @@ namespace GeoAddin.Openings_Windows
 
             if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;
             progress_pb.Visible = false;
+
+
+        }
+
+
+        private void result_bt_Click(object sender, EventArgs e)
+        {
+            result("result_bt");
         }
 
 
@@ -693,6 +721,10 @@ namespace GeoAddin.Openings_Windows
 
         }
 
+        private void addToResult_bt_Click(object sender, EventArgs e)
+        {
+            result("modify_bt");
+        }
     }
 
     public class EventRegHandler : IExternalEventHandler

@@ -433,6 +433,7 @@
             this.addToResult_bt.TabIndex = 9;
             this.addToResult_bt.Text = "Дополнить выборку";
             this.addToResult_bt.UseVisualStyleBackColor = true;
+            this.addToResult_bt.Click += new System.EventHandler(this.addToResult_bt_Click);
             // 
             // clearAll_bt
             // 
