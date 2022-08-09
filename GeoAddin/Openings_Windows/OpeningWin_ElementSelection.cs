@@ -28,7 +28,6 @@ namespace GeoAddin.Openings_Windows
 
         Stopwatch sw;
 
-        //public bool threadState = true;
         public int count = 2; //не хочется переименовывать 8 combobox'ов из-за того, что удалил первый по необходимой нумерации
         public int ruleCount = 1;
         static List<Element> elementsInView;
@@ -36,6 +35,8 @@ namespace GeoAddin.Openings_Windows
         List<Element> roughSample = new List<Element>();
         public static List<ElementId> idList;
 
+
+        public static DataTable allElID;
         public static string[,] paramNamesAndTypes;
         public static string actionType = "";
 
@@ -59,7 +60,6 @@ namespace GeoAddin.Openings_Windows
                 .Where(el => el.LevelId.ToString() != "-1") //на данном этапе интересуют только экземпляры
                 .Where(el => el.Category.CategoryType.ToString() == "Model")
                 .ToList();
-            //elementsInView = (List<Element>)docCollector.ToElements();
 
             progress_pb.Visible = false;
 
@@ -86,16 +86,27 @@ namespace GeoAddin.Openings_Windows
             relationship_ComBox.Text = "ИЛИ";
             //---логические отношения между правилами---//
 
+            allElID = new DataTable();
+            allElID.Columns.Add("ID");
+            allElID.Columns.Add("Category"); //в теории можно и расширить, чтобы иметь базу не только id и категорий, но и чего-то еще (имен, например)
+            allElID.PrimaryKey = new DataColumn[] { allElID.Columns["ID"] }; //По этому primary key можно находить загруженные элементы
+
+            int ind = 0;
+
             foreach (var element in elementsInView)
             {
+                DataRow row = allElID.NewRow();
                 try
                 {
                     if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains("-Все элементы-") == false) (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add("-Все элементы-");
                     if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Contains(element.Category.Name.ToString()) == false)
                     {
                         (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Add(element.Category.Name.ToString());
-                        //parameter = (List<Parameter>)element.GetOrderedParameters();
                     }
+
+                    row["ID"] = element.Id.ToString();
+                    row["Category"] = element.Category.Name.ToString();
+                    allElID.Rows.Add(row);
                 }
                 catch
                 {
@@ -645,6 +656,18 @@ namespace GeoAddin.Openings_Windows
             import.Start();
             //Надо не забыть починить скроллбар
         }
+        
+        private bool checkID(string ID, string category)
+        {
+            if (allElID.Rows.Contains(ID))
+            {
+                DataRow foundRow = allElID.Rows.Find(ID);
+                if (null != foundRow && foundRow["Category"].ToString() == category)
+                    return true;
+                else return false;
+            }
+            else return false;
+        }
         private void Import()
         {
 
@@ -666,7 +689,7 @@ namespace GeoAddin.Openings_Windows
                     if (MessageBox.Show("Таблица, вероятно, не является выгруженной из текущего документа Revit. Все равно загрузить?", "Несоответствие наименований", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                         Thread.ResetAbort();
 
-                if (MessageBox.Show("Проверить элементы на соответствие текущему документу?", "Проверка соответствия", MessageBoxButtons.YesNo) == DialogResult.OK)
+                if (MessageBox.Show("Проверить элементы на соответствие текущему документу?", "Проверка соответствия", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     check = true;
 
                 result_DGV.Refresh();
@@ -690,6 +713,11 @@ namespace GeoAddin.Openings_Windows
                 {
                     progress_pb.Value++;
                     DataRow row = localTable.NewRow();
+
+                    if (check)
+                        if (checkID(workSheet.Cell(i, 1).Value.ToString(), workSheet.Cell(i, 2).Value.ToString()) == false)
+                            continue;
+                        
                     for (int j = 1; j <= columnsUsed; j++) 
                         row[j-1] = workSheet.Cell(i, j).Value.ToString();
 
@@ -700,7 +728,8 @@ namespace GeoAddin.Openings_Windows
                 result_DGV.DataSource = localTable;
 
                 sw.Stop();
-                timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс.";
+                if (check == false) timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс., выгружено элементов: " + result_DGV.RowCount.ToString();
+                if (check) timeLabel.Text =  $"{(sw.ElapsedMilliseconds).ToString()} мс. | Элементов в списке было: {rowsUsed}; из них загружено: {result_DGV.RowCount.ToString()}";
 
                 localTable = null;
                 workSheet = null;
