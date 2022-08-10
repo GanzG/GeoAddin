@@ -34,6 +34,7 @@ namespace GeoAddin.Openings_Windows
         static List<Autodesk.Revit.DB.Parameter> parameter;
         List<Element> roughSample = new List<Element>();
         public static List<ElementId> idList;
+        public static List<ElementId> selectedID;
 
 
         public static DataTable allElID;
@@ -91,7 +92,7 @@ namespace GeoAddin.Openings_Windows
             allElID.Columns.Add("Category"); //в теории можно и расширить, чтобы иметь базу не только id и категорий, но и чего-то еще (имен, например)
             allElID.PrimaryKey = new DataColumn[] { allElID.Columns["ID"] }; //По этому primary key можно находить загруженные элементы
 
-            int ind = 0;
+            result_DGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             foreach (var element in elementsInView)
             {
@@ -115,13 +116,7 @@ namespace GeoAddin.Openings_Windows
             }
 
             (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true; //сортирую по алфавиту
-
-
         }
-
-
-
-
 
         public void deformationControl()
         {
@@ -349,22 +344,34 @@ namespace GeoAddin.Openings_Windows
         {
             List<string> nameList = null; //свожу задачу к более простой выборке, чтобы не делать компаратор для класса Parameter
             Element element;
+            int localCount = count;
+            string catName;
 
+            if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Text == "-Все элементы-")
+                localCount = (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items.Count;
 
-            for (int i = 2; i <= count; i++)
+            for (int i = 2; i <= localCount; i++)
             {
-                if ((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text != "") //пропускаем пустые ComBox
+                if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Text == "-Все элементы-")
+                {
+                    catName = (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Items[-1+i].ToString();
+                }
+                else catName = (CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+
+                if (catName != "") //пропускаем пустые ComBox
                 {
                     
-                    element = findElement((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text); //получаем нужный элемент по названию 
-                    //считаю название доверительным параметром, т.к. в Load-блоке названия формируются из параметров этих же элементов, а внешнее редактирование запрещено
+                element = findElement(catName); //получаем нужный элемент по названию 
+                //считаю название доверительным параметром, т.к. в Load-блоке названия формируются из параметров этих же элементов, а внешнее редактирование запрещено
 
-                    if (nameList == null)
-                        nameList = new List<string>(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList()));
-                    else 
-                        nameList = nameList.Intersect(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList())).ToList(); 
+                if (nameList == null)
+                    nameList = new List<string>(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList()));
+                else 
+                    nameList = nameList.Intersect(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList())).ToList(); 
                 }
             }
+
+
 
 
             foreach (var name in nameList)
@@ -380,16 +387,19 @@ namespace GeoAddin.Openings_Windows
         private void roughSampling() //осуществляется грубая выборка (без учета параметров) элементов выбранных категорий, 
         { //чтобы при учете параметров не было необходимости проверять все элементы
 
-            if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Text != "Все элементы")
+            if ((CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Text != "-Все элементы-")
             {
                 roughSample.Clear();
                 List<string> selectedCategories = new List<string>();
                 for (int i = 2; i <= count; i++) selectedCategories.Add((CatGroup.Controls["cat_" + i + "_ComBox"] as System.Windows.Forms.ComboBox).Text);
 
-                foreach (var element in elementsInView)
-                    if (selectedCategories.Contains(element.Category.Name.ToString()) == true) roughSample.Add(element);
+                foreach (var element in elementsInView)   
+                    if (selectedCategories.Contains(element.Category.Name.ToString()) == true) 
+                        roughSample.Add(element);
             }
-        }
+            else
+                roughSample = elementsInView;
+    }
 
         public bool checkRules(Element element)
         {
@@ -534,6 +544,7 @@ namespace GeoAddin.Openings_Windows
             }
             result_DGV.DataSource = localTable;
             result_DGV.Sort(result_DGV.Columns[1], ListSortDirection.Ascending);
+            result_DGV.ClearSelection();
             sw.Stop();
             timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс. на " + result_DGV.Rows.Count.ToString() + " элементов с " + result_DGV.ColumnCount.ToString() + " параметрами вывода";
 
@@ -542,6 +553,14 @@ namespace GeoAddin.Openings_Windows
             progress_pb.Visible = false;
 
 
+        }
+
+        private void mouseClickOnDGV(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //if (result_DGV.Rows[e.RowIndex].Selected)
+            //{
+            //    result_DGV.Rows[e.RowIndex].Selected = false;
+            //}
         }
 
 
@@ -553,13 +572,21 @@ namespace GeoAddin.Openings_Windows
 
         private void action_bt_Click(object sender, EventArgs e) //надо не забыть сделать действия направленными на выделенные в DGV элементы, но это чуть позже
         {
-            if (result_DGV.Rows.Count >= 1) 
-                switch(action_ComBox.Text)
+            if (result_DGV.Rows.Count >= 1)
+            {
+                selectedID = new List<ElementId>();
+                if (result_DGV.SelectedCells.Count > 0)
+                    for (int i = 0; i < result_DGV.SelectedRows.Count; i++)
+                        selectedID.Add(idList[idList.FindIndex(x => x.ToString() == result_DGV.SelectedRows[i].Cells[0].Value.ToString())]);
+                        
+                else selectedID = idList;
+
+                switch (action_ComBox.Text)
                 {
                     case "":
                         break;
                     case "Выделить":
-                        uidoc.Selection.SetElementIds(idList); //первоначальное рабочее решение. Надо подумать, как сделать более корректно/юзерабельно 
+                        uidoc.Selection.SetElementIds(selectedID); 
                         break;
                     default:
                         if (ExEvent != null)
@@ -571,13 +598,15 @@ namespace GeoAddin.Openings_Windows
                             MessageBox.Show("External event handler is null");
                         break;
                 }
+            } 
+                
+                
         }
 
         private void saveDGV_bt_Click(object sender, EventArgs e)
         {
 
             Task.Factory.StartNew(Export);
-
         }
 
         private void Export()
@@ -764,25 +793,29 @@ namespace GeoAddin.Openings_Windows
         public void Execute(UIApplication app) //внедрение новых действий осуществлять здесь, основной класс просто ссылается на этот
         {
             if (OpeningWin_ElementSelection.actionType != "" && OpeningWin_ElementSelection.actionType != "Done")
+            {
+                
                 using (Transaction t = new Transaction(OpeningWin_ElementSelection.doc, "Действие над выделенными элементами"))
                 {
                     t.Start();
                     switch (OpeningWin_ElementSelection.actionType)
                     {
                         case "Скрыть":
-                            OpeningWin_ElementSelection.doc.ActiveView.HideElements(OpeningWin_ElementSelection.idList);
+                            OpeningWin_ElementSelection.doc.ActiveView.HideElements(OpeningWin_ElementSelection.selectedID);
                             break;
                         case "Показать все":
-                            OpeningWin_ElementSelection.doc.ActiveView.UnhideElements(OpeningWin_ElementSelection.idList);
+                            OpeningWin_ElementSelection.doc.ActiveView.UnhideElements(OpeningWin_ElementSelection.selectedID);
                             break;
                         case "Удалить":
-                            OpeningWin_ElementSelection.doc.Delete(OpeningWin_ElementSelection.idList);
+                            OpeningWin_ElementSelection.doc.Delete(OpeningWin_ElementSelection.selectedID);
                             break;
                     }
 
                     t.Commit();
                     OpeningWin_ElementSelection.actionType = "Done";
                 }
+            }    
+                
 
         }
 

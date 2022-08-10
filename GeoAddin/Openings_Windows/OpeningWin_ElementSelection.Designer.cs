@@ -107,10 +107,12 @@
             this.result_DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.result_DGV.Location = new System.Drawing.Point(10, 48);
             this.result_DGV.Name = "result_DGV";
+            this.result_DGV.ReadOnly = true;
             this.result_DGV.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.result_DGV.RowHeadersVisible = false;
             this.result_DGV.Size = new System.Drawing.Size(585, 165);
             this.result_DGV.TabIndex = 1;
+            this.result_DGV.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.mouseClickOnDGV);
             // 
             // CatGroup
             // 
