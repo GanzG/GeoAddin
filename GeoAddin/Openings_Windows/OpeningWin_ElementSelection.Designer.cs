@@ -66,22 +66,17 @@
             this.result_bt = new System.Windows.Forms.Button();
             this.addToResult_bt = new System.Windows.Forms.Button();
             this.clearAll_bt = new System.Windows.Forms.Button();
-            this.saveDGV_bt = new System.Windows.Forms.Button();
-            this.loadDGV_bt = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.action_bt = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.delete_bt = new System.Windows.Forms.Button();
-            this.add_bt = new System.Windows.Forms.Button();
             this.mainGroup = new System.Windows.Forms.GroupBox();
             this.progress_pb = new System.Windows.Forms.ProgressBar();
             this.action_ComBox = new System.Windows.Forms.ComboBox();
-            this.rule_rb = new System.Windows.Forms.RadioButton();
-            this.cat_rb = new System.Windows.Forms.RadioButton();
             this.getPath_sfd = new System.Windows.Forms.SaveFileDialog();
             this.openFile_ofd = new System.Windows.Forms.OpenFileDialog();
             this.timeLabel = new System.Windows.Forms.Label();
+            this.menu_ms = new System.Windows.Forms.MenuStrip();
             ((System.ComponentModel.ISupportInitialize)(this.result_DGV)).BeginInit();
             this.CatGroup.SuspendLayout();
             this.ParamGroup.SuspendLayout();
@@ -91,7 +86,7 @@
             // close_bt
             // 
             this.close_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.close_bt.Location = new System.Drawing.Point(478, 335);
+            this.close_bt.Location = new System.Drawing.Point(478, 287);
             this.close_bt.Name = "close_bt";
             this.close_bt.Size = new System.Drawing.Size(109, 42);
             this.close_bt.TabIndex = 0;
@@ -124,7 +119,7 @@
             this.CatGroup.Controls.Add(this.cat_5_ComBox);
             this.CatGroup.Controls.Add(this.cat_7_ComBox);
             this.CatGroup.Controls.Add(this.cat_6_ComBox);
-            this.CatGroup.Location = new System.Drawing.Point(16, 41);
+            this.CatGroup.Location = new System.Drawing.Point(16, 47);
             this.CatGroup.Name = "CatGroup";
             this.CatGroup.Size = new System.Drawing.Size(171, 101);
             this.CatGroup.TabIndex = 3;
@@ -216,7 +211,7 @@
             this.ParamGroup.Controls.Add(this.ruleValue_2_tb);
             this.ParamGroup.Controls.Add(this.rule_3_ComBox);
             this.ParamGroup.Controls.Add(this.param_3_ComBox);
-            this.ParamGroup.Location = new System.Drawing.Point(211, 41);
+            this.ParamGroup.Location = new System.Drawing.Point(211, 47);
             this.ParamGroup.Name = "ParamGroup";
             this.ParamGroup.Size = new System.Drawing.Size(396, 133);
             this.ParamGroup.TabIndex = 4;
@@ -389,7 +384,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(18, 18);
+            this.label1.Location = new System.Drawing.Point(18, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 20);
             this.label1.TabIndex = 5;
@@ -399,7 +394,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(207, 18);
+            this.label2.Location = new System.Drawing.Point(207, 24);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(174, 20);
             this.label2.TabIndex = 6;
@@ -448,28 +443,6 @@
             this.clearAll_bt.UseVisualStyleBackColor = true;
             this.clearAll_bt.Click += new System.EventHandler(this.clearAll_bt_Click);
             // 
-            // saveDGV_bt
-            // 
-            this.saveDGV_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.saveDGV_bt.Location = new System.Drawing.Point(10, 345);
-            this.saveDGV_bt.Name = "saveDGV_bt";
-            this.saveDGV_bt.Size = new System.Drawing.Size(114, 42);
-            this.saveDGV_bt.TabIndex = 11;
-            this.saveDGV_bt.Text = "Сохранить выборку";
-            this.saveDGV_bt.UseVisualStyleBackColor = true;
-            this.saveDGV_bt.Click += new System.EventHandler(this.saveDGV_bt_Click);
-            // 
-            // loadDGV_bt
-            // 
-            this.loadDGV_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.loadDGV_bt.Location = new System.Drawing.Point(130, 345);
-            this.loadDGV_bt.Name = "loadDGV_bt";
-            this.loadDGV_bt.Size = new System.Drawing.Size(114, 42);
-            this.loadDGV_bt.TabIndex = 12;
-            this.loadDGV_bt.Text = "Загрузить выборку";
-            this.loadDGV_bt.UseVisualStyleBackColor = true;
-            this.loadDGV_bt.Click += new System.EventHandler(this.loadDGV_bt_Click);
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -512,42 +485,10 @@
             this.button3.Text = "Шаблон поиска";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // delete_bt
-            // 
-            this.delete_bt.BackColor = System.Drawing.Color.Transparent;
-            this.delete_bt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.delete_bt.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.delete_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.delete_bt.Location = new System.Drawing.Point(258, 361);
-            this.delete_bt.Name = "delete_bt";
-            this.delete_bt.Size = new System.Drawing.Size(82, 26);
-            this.delete_bt.TabIndex = 19;
-            this.delete_bt.Text = "Удалить";
-            this.delete_bt.UseVisualStyleBackColor = false;
-            this.delete_bt.Click += new System.EventHandler(this.delete_bt_Click);
-            // 
-            // add_bt
-            // 
-            this.add_bt.BackColor = System.Drawing.Color.Transparent;
-            this.add_bt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.add_bt.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.add_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.add_bt.Location = new System.Drawing.Point(258, 330);
-            this.add_bt.Name = "add_bt";
-            this.add_bt.Size = new System.Drawing.Size(82, 26);
-            this.add_bt.TabIndex = 18;
-            this.add_bt.Text = "Добавить";
-            this.add_bt.UseVisualStyleBackColor = false;
-            this.add_bt.Click += new System.EventHandler(this.add_bt_Click);
-            // 
             // mainGroup
             // 
             this.mainGroup.Controls.Add(this.progress_pb);
             this.mainGroup.Controls.Add(this.action_ComBox);
-            this.mainGroup.Controls.Add(this.rule_rb);
-            this.mainGroup.Controls.Add(this.cat_rb);
-            this.mainGroup.Controls.Add(this.delete_bt);
-            this.mainGroup.Controls.Add(this.add_bt);
             this.mainGroup.Controls.Add(this.Результат);
             this.mainGroup.Controls.Add(this.button3);
             this.mainGroup.Controls.Add(this.close_bt);
@@ -558,11 +499,9 @@
             this.mainGroup.Controls.Add(this.addToResult_bt);
             this.mainGroup.Controls.Add(this.label7);
             this.mainGroup.Controls.Add(this.clearAll_bt);
-            this.mainGroup.Controls.Add(this.loadDGV_bt);
-            this.mainGroup.Controls.Add(this.saveDGV_bt);
             this.mainGroup.Location = new System.Drawing.Point(16, 195);
             this.mainGroup.Name = "mainGroup";
-            this.mainGroup.Size = new System.Drawing.Size(593, 397);
+            this.mainGroup.Size = new System.Drawing.Size(593, 347);
             this.mainGroup.TabIndex = 18;
             this.mainGroup.TabStop = false;
             // 
@@ -583,28 +522,6 @@
             this.action_ComBox.Size = new System.Drawing.Size(107, 21);
             this.action_ComBox.TabIndex = 48;
             // 
-            // rule_rb
-            // 
-            this.rule_rb.AutoSize = true;
-            this.rule_rb.Location = new System.Drawing.Point(357, 358);
-            this.rule_rb.Name = "rule_rb";
-            this.rule_rb.Size = new System.Drawing.Size(69, 17);
-            this.rule_rb.TabIndex = 21;
-            this.rule_rb.TabStop = true;
-            this.rule_rb.Text = "Правило";
-            this.rule_rb.UseVisualStyleBackColor = true;
-            // 
-            // cat_rb
-            // 
-            this.cat_rb.AutoSize = true;
-            this.cat_rb.Location = new System.Drawing.Point(357, 335);
-            this.cat_rb.Name = "cat_rb";
-            this.cat_rb.Size = new System.Drawing.Size(80, 17);
-            this.cat_rb.TabIndex = 20;
-            this.cat_rb.TabStop = true;
-            this.cat_rb.Text = "Категорию";
-            this.cat_rb.UseVisualStyleBackColor = true;
-            // 
             // getPath_sfd
             // 
             this.getPath_sfd.Filter = "Таблица Excel | *.xlsx";
@@ -612,22 +529,31 @@
             // timeLabel
             // 
             this.timeLabel.AutoSize = true;
-            this.timeLabel.Location = new System.Drawing.Point(13, 595);
+            this.timeLabel.Location = new System.Drawing.Point(19, 545);
             this.timeLabel.Name = "timeLabel";
             this.timeLabel.Size = new System.Drawing.Size(0, 13);
             this.timeLabel.TabIndex = 50;
+            // 
+            // menu_ms
+            // 
+            this.menu_ms.Location = new System.Drawing.Point(0, 0);
+            this.menu_ms.Name = "menu_ms";
+            this.menu_ms.Size = new System.Drawing.Size(620, 24);
+            this.menu_ms.TabIndex = 51;
+            this.menu_ms.Text = "menuStrip1";
             // 
             // OpeningWin_ElementSelection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 609);
+            this.ClientSize = new System.Drawing.Size(620, 558);
             this.Controls.Add(this.timeLabel);
             this.Controls.Add(this.mainGroup);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ParamGroup);
             this.Controls.Add(this.CatGroup);
+            this.Controls.Add(this.menu_ms);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "OpeningWin_ElementSelection";
             this.Text = "Селектор элементов";
@@ -684,21 +610,16 @@
         private System.Windows.Forms.Button result_bt;
         private System.Windows.Forms.Button addToResult_bt;
         private System.Windows.Forms.Button clearAll_bt;
-        private System.Windows.Forms.Button saveDGV_bt;
-        private System.Windows.Forms.Button loadDGV_bt;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button action_bt;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button delete_bt;
-        private System.Windows.Forms.Button add_bt;
         private System.Windows.Forms.GroupBox mainGroup;
-        private System.Windows.Forms.RadioButton rule_rb;
-        private System.Windows.Forms.RadioButton cat_rb;
         private System.Windows.Forms.ComboBox action_ComBox;
         private System.Windows.Forms.ProgressBar progress_pb;
         private System.Windows.Forms.SaveFileDialog getPath_sfd;
         private System.Windows.Forms.OpenFileDialog openFile_ofd;
         private System.Windows.Forms.Label timeLabel;
+        private System.Windows.Forms.MenuStrip menu_ms;
     }
 }

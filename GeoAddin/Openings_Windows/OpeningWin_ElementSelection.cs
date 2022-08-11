@@ -116,6 +116,61 @@ namespace GeoAddin.Openings_Windows
             }
 
             (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true; //сортирую по алфавиту
+
+            ToolStripMenuItem fileItem = new ToolStripMenuItem("Файл");
+            fileItem.DropDownItems.Add("Сохранить поиск в шаблон");
+            fileItem.DropDownItems[0].Click += (snd, ee) => { saveSampleOfSearch(); };
+            fileItem.DropDownItems.Add("Экспортировать поиск (.xlsx)", null, new EventHandler(saveDGV_bt_Click));
+            menu_ms.Items.Add(fileItem);
+
+            ToolStripMenuItem addItem = new ToolStripMenuItem("Добавить...");
+            addItem.DropDownItems.Add("Добавить категорию");
+            addItem.DropDownItems[0].Click += (snd, ee) => { addDelControl("add", "cat"); };
+            addItem.DropDownItems.Add("Добавить правило");
+            addItem.DropDownItems[1].Click += (snd, ee) => { addDelControl("add", "param"); };
+            menu_ms.Items.Add(addItem);
+
+            ToolStripMenuItem delItem = new ToolStripMenuItem("Удалить...");
+            delItem.DropDownItems.Add("Удалить категорию");
+            delItem.DropDownItems[0].Click += (snd, ee) => { addDelControl("del", "cat"); };
+            delItem.DropDownItems.Add("Удалить правило");
+            delItem.DropDownItems[1].Click += (snd, ee) => { addDelControl("del", "param"); };
+            menu_ms.Items.Add(delItem);
+
+            ToolStripMenuItem loadItem = new ToolStripMenuItem("Загрузить...");
+            loadItem.DropDownItems.Add("Загрузить xlsx-файл", null, new EventHandler(loadDGV_bt_Click));
+            menu_ms.Items.Add(loadItem);
+
+            ToolStripMenuItem samplesItem = new ToolStripMenuItem("Шаблоны поиска");
+            loadSavedSamples(ref samplesItem);
+            menu_ms.Items.Add(samplesItem);
+        }
+
+        private void loadSavedSamples(ref ToolStripMenuItem item)
+        {
+            System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples");
+            if (dirInfo.Exists)
+            {
+                item.DropDownItems.Clear();
+                string[] SSFilesNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples", "SavedSample*.*");
+                foreach (var name in SSFilesNames) { item.DropDownItems.Add(Path.GetFileName(name)); }
+
+            }
+
+
+
+        }
+
+        private void saveSampleOfSearch()
+        {
+            if (result_DGV.Rows.Count >= 1)
+            {
+                getPath_sfd.FileName = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples\\SavedSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss") + ".xlsx";
+                getPath_sfd.AddExtension = true;
+                getPath_sfd.DefaultExt = "xlsx";
+                getPath_sfd.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+                Task.Factory.StartNew(Export);
+            }
         }
 
         public void deformationControl()
@@ -220,16 +275,16 @@ namespace GeoAddin.Openings_Windows
 
         private void add_bt_Click(object sender, EventArgs e)
         {
-            if (cat_rb.Checked) addDelControl("add", "cat");
-            if (rule_rb.Checked) addDelControl("add", "param");
+            //if (cat_rb.Checked) addDelControl("add", "cat");
+            //if (rule_rb.Checked) addDelControl("add", "param");
 
 
         }
 
         private void delete_bt_Click(object sender, EventArgs e)
         {
-            if (cat_rb.Checked) addDelControl("del", "cat");
-            if (rule_rb.Checked) addDelControl("del", "param");
+            //if (cat_rb.Checked) addDelControl("del", "cat");
+            //if (rule_rb.Checked) addDelControl("del", "param");
         }
 
         private void selectControl(object sender, EventArgs e)
@@ -360,14 +415,16 @@ namespace GeoAddin.Openings_Windows
 
                 if (catName != "") //пропускаем пустые ComBox
                 {
-                    
-                element = findElement(catName); //получаем нужный элемент по названию 
-                //считаю название доверительным параметром, т.к. в Load-блоке названия формируются из параметров этих же элементов, а внешнее редактирование запрещено
-
-                if (nameList == null)
-                    nameList = new List<string>(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList()));
-                else 
-                    nameList = nameList.Intersect(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList())).ToList(); 
+                    try
+                    {
+                        element = findElement(catName); //получаем нужный элемент по названию 
+                                                        //считаю название доверительным параметром, т.к. в Load-блоке названия формируются из параметров этих же элементов, а внешнее редактирование запрещено
+                        if (nameList == null)
+                            nameList = new List<string>(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList()));
+                        else
+                            nameList = nameList.Intersect(getParamNames(element.GetOrderedParameters().Concat(doc.GetElement(element.GetTypeId()).GetOrderedParameters()).ToList())).ToList();
+                    }
+                    catch { }
                 }
             }
 
@@ -460,7 +517,6 @@ namespace GeoAddin.Openings_Windows
                     if (checkRuleCount >= 1) res = true;
                     break;
             }
-
             return res;
         }
 
@@ -605,84 +661,83 @@ namespace GeoAddin.Openings_Windows
 
         private void saveDGV_bt_Click(object sender, EventArgs e)
         {
-
-            Task.Factory.StartNew(Export);
-        }
-
-        private void Export()
-        {
-            
             if (result_DGV.Rows.Count >= 1)
             {
                 getPath_sfd.FileName = "ElSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss");
                 getPath_sfd.AddExtension = true;
                 getPath_sfd.DefaultExt = "xlsx";
-
                 DialogResult dialogResult = DialogResult.None;
-                this.Invoke(new Action(() =>
-                {
-                    if (getPath_sfd.ShowDialog() == DialogResult.OK) dialogResult = DialogResult.OK;
 
-                })); 
-                //запуск немодального окна необходимо выполнить в рамках основного потока
-                
+                if (getPath_sfd.ShowDialog() == DialogResult.OK) 
+                    dialogResult = DialogResult.OK;
+
+
                 if (dialogResult == DialogResult.OK)
                 {
-                    sw = new Stopwatch();
-                    sw.Start();
-
-                    progress_pb.Visible = true;
-                    progress_pb.Value = 0;
-                    progress_pb.Maximum = result_DGV.ColumnCount + result_DGV.Rows.Count * result_DGV.ColumnCount;
-                    IXLWorkbook xls_table = new XLWorkbook();
-                    IXLWorksheet xls_sheet = xls_table.Worksheets.Add(doc.Title);
-
-                    for (int i = 0; i < result_DGV.ColumnCount; i++)
-                    {
-                        xls_sheet.Cell(1, 1 + i).Value = result_DGV.Columns[i].Name;
-                        xls_sheet.Cell(1, 1 + i).Style.Fill.BackgroundColor = XLColor.Peach;
-                        progress_pb.Value++;
-                    }
-                    XLColor cellColor = XLColor.MediumAquamarine;
-
-                    for (int i = 0; i <= result_DGV.Rows.Count - 1; i++)
-                    {
-                        if ((i > 0) && (result_DGV.Rows[i].Cells["Category"].Value.ToString() != result_DGV.Rows[i - 1].Cells["Category"].Value.ToString()))
-                        {
-                            if (cellColor == XLColor.MediumAquamarine) cellColor = XLColor.LightBlue;
-                            else cellColor = XLColor.MediumAquamarine;
-                        }
-
-                        for (int j = 0; j < result_DGV.ColumnCount; j++)
-                        {
-                            xls_sheet.Cell(2 + i, 1 + j).Value = result_DGV.Rows[i].Cells[j].Value;
-                            xls_sheet.Cell(2 + i, 1 + j).Style.Fill.BackgroundColor = cellColor;
-                            progress_pb.Value++;
-                        }
-                    }
-
-
-
-                    progress_pb.Visible = false;
-                    xls_sheet.Columns().AdjustToContents();
-                    xls_sheet.Columns().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                    xls_table.SaveAs(getPath_sfd.FileName);
-
-                    sw.Stop();
-                    timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс.";
-
+                    //Task.Factory.StartNew(Export);
+                    Export();
                     Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
-
                 }
             }
+
+        }
+
+        private void Export()
+        {
+            sw = new Stopwatch();
+            sw.Start();
+
+            progress_pb.Visible = true;
+            progress_pb.Value = 0;
+            progress_pb.Maximum = result_DGV.ColumnCount + result_DGV.Rows.Count * result_DGV.ColumnCount;
+            IXLWorkbook xls_table = new XLWorkbook();
+            IXLWorksheet xls_sheet = xls_table.Worksheets.Add(doc.Title);
+
+            for (int i = 0; i < result_DGV.ColumnCount; i++)
+            {
+                xls_sheet.Cell(1, 1 + i).Value = result_DGV.Columns[i].Name;
+                xls_sheet.Cell(1, 1 + i).Style.Fill.BackgroundColor = XLColor.Peach;
+                progress_pb.Value++;
+            }
+            XLColor cellColor = XLColor.MediumAquamarine;
+
+            for (int i = 0; i <= result_DGV.Rows.Count - 1; i++)
+            {
+                if ((i > 0) && (result_DGV.Rows[i].Cells["Category"].Value.ToString() != result_DGV.Rows[i - 1].Cells["Category"].Value.ToString()))
+                {
+                    if (cellColor == XLColor.MediumAquamarine) cellColor = XLColor.LightBlue;
+                    else cellColor = XLColor.MediumAquamarine;
+                }
+
+                for (int j = 0; j < result_DGV.ColumnCount; j++)
+                {
+                    xls_sheet.Cell(2 + i, 1 + j).Value = result_DGV.Rows[i].Cells[j].Value;
+                    xls_sheet.Cell(2 + i, 1 + j).Style.Fill.BackgroundColor = cellColor;
+                    progress_pb.Value++;
+                }
+            }
+
+            progress_pb.Visible = false;
+            xls_sheet.Columns().AdjustToContents();
+            xls_sheet.Columns().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            xls_table.SaveAs(getPath_sfd.FileName);
+            sw.Stop();
+            timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс.";
+
+
+            //Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
         }
 
 
 
         private void loadDGV_bt_Click(object sender, EventArgs e)
         {
-            Thread import = new Thread(Import);
-            import.Start();
+            
+                Thread import = new Thread(Import);
+                import.Start();    
+
+
+
             //Надо не забыть починить скроллбар
         }
         
