@@ -152,14 +152,20 @@ namespace GeoAddin.Openings_Windows
             if (dirInfo.Exists)
             {
                 item.DropDownItems.Clear();
-                string[] SSFilesNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples", "SavedSample*.*");
-                foreach (var name in SSFilesNames) { item.DropDownItems.Add(Path.GetFileName(name)); }
-
+                string[] SSFilesNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples", "SavedSample - " + doc.Title + " *.*");
+                foreach (var name in SSFilesNames) 
+                {
+                    item.DropDownItems.Add(Path.GetFileName(name)).Click += (snd, ee) => 
+                    { 
+                        openFile_ofd.FileName = name;
+                        var import = new Thread(() => Import("loadSavedSamples"));
+                        import.Start();
+                    }; 
+                }
             }
-
-
-
         }
+
+
 
         private void saveSampleOfSearch()
         {
@@ -169,7 +175,8 @@ namespace GeoAddin.Openings_Windows
                 getPath_sfd.AddExtension = true;
                 getPath_sfd.DefaultExt = "xlsx";
                 getPath_sfd.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-                Task.Factory.StartNew(Export);
+                var export = new Thread(() => Export("saveSampleOfSearch"));
+                export.Start();
             }
         }
 
@@ -269,22 +276,17 @@ namespace GeoAddin.Openings_Windows
 
         private void close_bt_Click(object sender, EventArgs e)
         {
-            //threadState = false;
             this.Close();
         }
 
         private void add_bt_Click(object sender, EventArgs e)
         {
-            //if (cat_rb.Checked) addDelControl("add", "cat");
-            //if (rule_rb.Checked) addDelControl("add", "param");
-
 
         }
 
         private void delete_bt_Click(object sender, EventArgs e)
         {
-            //if (cat_rb.Checked) addDelControl("del", "cat");
-            //if (rule_rb.Checked) addDelControl("del", "param");
+
         }
 
         private void selectControl(object sender, EventArgs e)
@@ -304,7 +306,6 @@ namespace GeoAddin.Openings_Windows
 
             string ruleName = "rule" + paramBox.Name.Remove(0, 5);
             System.Windows.Forms.ComboBox ruleBox = (ParamGroup.Controls[ruleName] as System.Windows.Forms.ComboBox);
-            //string paramName = "param" + combox.Name.Remove(0, 4);
             string storageType = "";
             //надо написать класс, который будет содержать методы для возврата имен параметров, их типов и т.п.
 
@@ -674,15 +675,14 @@ namespace GeoAddin.Openings_Windows
 
                 if (dialogResult == DialogResult.OK)
                 {
-                    //Task.Factory.StartNew(Export);
-                    Export();
-                    Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
+                    var export = new Thread(() => Export("saveDGV_bt_Click"));
+                    export.Start();
                 }
             }
 
         }
 
-        private void Export()
+        private void Export(string source)
         {
             sw = new Stopwatch();
             sw.Start();
@@ -722,21 +722,28 @@ namespace GeoAddin.Openings_Windows
             xls_sheet.Columns().Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
             xls_table.SaveAs(getPath_sfd.FileName);
             sw.Stop();
-            timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс.";
+            timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс., - OK";
 
 
-            //Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
+            if (source == "saveDGV_bt_Click") Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
         }
 
 
 
         private void loadDGV_bt_Click(object sender, EventArgs e)
         {
-            
-                Thread import = new Thread(Import);
-                import.Start();    
+            DialogResult dialogResult = DialogResult.None;
+            openFile_ofd.Filter = "Excel файлы (*.xlsx)|*.xlsx";
+
+            if (openFile_ofd.ShowDialog() == DialogResult.OK) 
+                dialogResult = DialogResult.OK;
 
 
+            if (dialogResult == DialogResult.OK)
+            {
+                var import = new Thread(() => Import("loadDGV_bt_Click"));
+                import.Start();
+            }
 
             //Надо не забыть починить скроллбар
         }
@@ -752,75 +759,64 @@ namespace GeoAddin.Openings_Windows
             }
             else return false;
         }
-        private void Import()
+        private void Import(string source)
         {
-
-            DialogResult dialogResult = DialogResult.None;
-            openFile_ofd.Filter = "Excel файлы (*.xlsx)|*.xlsx";
+            var excelFile = new XLWorkbook(openFile_ofd.FileName);
+            var workSheet = excelFile.Worksheet(1);
             bool check = false;
-            this.Invoke(new Action(() =>
+
+            if (source == "loadDGV_bt_Click" && workSheet.Name != doc.Title)
+                if (MessageBox.Show("Таблица, вероятно, не является выгруженной из текущего документа Revit. Все равно загрузить?", "Несоответствие наименований", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    Thread.ResetAbort();
+
+            if (source == "loadDGV_bt_Click" && MessageBox.Show("Проверить элементы на соответствие текущему документу?", "Проверка соответствия", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                check = true;
+
+            result_DGV.Refresh();
+
+            int rowsUsed = workSheet.RowsUsed().Count();
+            int columnsUsed = workSheet.ColumnsUsed().Count();
+            DataTable localTable = new DataTable();
+
+            progress_pb.Value = 0;
+            progress_pb.Maximum = rowsUsed;
+
+            for (int i = 1; i <= columnsUsed; i++)
+                localTable.Columns.Add(workSheet.Cell(1, i).Value.ToString());
+
+            progress_pb.Visible = true;
+
+            sw = new Stopwatch();
+            sw.Start();
+
+            for (int i = 2; i <= rowsUsed; i++)
             {
-                if (openFile_ofd.ShowDialog() == DialogResult.OK) dialogResult = DialogResult.OK;
+                progress_pb.Value++;
+                DataRow row = localTable.NewRow();
 
-            }));
+                if (check)
+                    if (checkID(workSheet.Cell(i, 1).Value.ToString(), workSheet.Cell(i, 2).Value.ToString()) == false)
+                        continue;
 
-            if (dialogResult == DialogResult.OK)
-            {
-                var excelFile = new XLWorkbook(openFile_ofd.FileName);
-                var workSheet = excelFile.Worksheet(1);
+                for (int j = 1; j <= columnsUsed; j++)
+                    row[j - 1] = workSheet.Cell(i, j).Value.ToString();
 
-                if (workSheet.Name != doc.Title)
-                    if (MessageBox.Show("Таблица, вероятно, не является выгруженной из текущего документа Revit. Все равно загрузить?", "Несоответствие наименований", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                        Thread.ResetAbort();
-
-                if (MessageBox.Show("Проверить элементы на соответствие текущему документу?", "Проверка соответствия", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    check = true;
-
-                result_DGV.Refresh();
-
-                int rowsUsed = workSheet.RowsUsed().Count();
-                int columnsUsed = workSheet.ColumnsUsed().Count();
-                DataTable localTable = new DataTable();
-
-                progress_pb.Value = 0;
-                progress_pb.Maximum = rowsUsed;
-
-                for (int i = 1; i <= columnsUsed; i++)
-                    localTable.Columns.Add(workSheet.Cell(1, i).Value.ToString());             
-
-                progress_pb.Visible = true;
-
-                sw = new Stopwatch();
-                sw.Start();
-
-                for (int i = 2; i <= rowsUsed; i++)
-                {
-                    progress_pb.Value++;
-                    DataRow row = localTable.NewRow();
-
-                    if (check)
-                        if (checkID(workSheet.Cell(i, 1).Value.ToString(), workSheet.Cell(i, 2).Value.ToString()) == false)
-                            continue;
-                        
-                    for (int j = 1; j <= columnsUsed; j++) 
-                        row[j-1] = workSheet.Cell(i, j).Value.ToString();
-
-                    localTable.Rows.Add(row);
-                }
-
-                MessageBox.Show("Список успешно загружен."); //смешно, но надо понять, почему без этого не работает
-                result_DGV.DataSource = localTable;
-
-                sw.Stop();
-                if (check == false) timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс., выгружено элементов: " + result_DGV.RowCount.ToString();
-                if (check) timeLabel.Text =  $"{(sw.ElapsedMilliseconds).ToString()} мс. | Элементов в списке было: {rowsUsed}; из них загружено: {result_DGV.RowCount.ToString()}";
-
-                localTable = null;
-                workSheet = null;
-                excelFile.Dispose();
-
-                progress_pb.Visible = false;
+                localTable.Rows.Add(row);
             }
+
+            MessageBox.Show("Список успешно загружен."); //смешно, но надо понять, почему без этого не работает
+            result_DGV.DataSource = localTable;
+
+            sw.Stop();
+            if (check == false) timeLabel.Text = (sw.ElapsedMilliseconds).ToString() + " мс., выгружено элементов: " + result_DGV.RowCount.ToString();
+            if (check) timeLabel.Text = $"{(sw.ElapsedMilliseconds).ToString()} мс. | Элементов в списке было: {rowsUsed}; из них загружено: {result_DGV.RowCount.ToString()}";
+
+            localTable = null;
+            workSheet = null;
+            excelFile.Dispose();
+
+            progress_pb.Visible = false;
+
         }
 
         private void addToResult_bt_Click(object sender, EventArgs e)
@@ -849,7 +845,6 @@ namespace GeoAddin.Openings_Windows
         {
             if (OpeningWin_ElementSelection.actionType != "" && OpeningWin_ElementSelection.actionType != "Done")
             {
-                
                 using (Transaction t = new Transaction(OpeningWin_ElementSelection.doc, "Действие над выделенными элементами"))
                 {
                     t.Start();
@@ -870,8 +865,6 @@ namespace GeoAddin.Openings_Windows
                     OpeningWin_ElementSelection.actionType = "Done";
                 }
             }    
-                
-
         }
 
 
