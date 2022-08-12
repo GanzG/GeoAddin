@@ -123,27 +123,29 @@ namespace GeoAddin.Openings_Windows
             fileItem.DropDownItems.Add("Экспортировать поиск (.xlsx)", null, new EventHandler(saveDGV_bt_Click));
             menu_ms.Items.Add(fileItem);
 
-            ToolStripMenuItem addItem = new ToolStripMenuItem("Добавить...");
+            ToolStripMenuItem addItem = new ToolStripMenuItem("Добавить");
             addItem.DropDownItems.Add("Добавить категорию");
             addItem.DropDownItems[0].Click += (snd, ee) => { addDelControl("add", "cat"); };
             addItem.DropDownItems.Add("Добавить правило");
             addItem.DropDownItems[1].Click += (snd, ee) => { addDelControl("add", "param"); };
             menu_ms.Items.Add(addItem);
 
-            ToolStripMenuItem delItem = new ToolStripMenuItem("Удалить...");
+            ToolStripMenuItem delItem = new ToolStripMenuItem("Удалить");
             delItem.DropDownItems.Add("Удалить категорию");
             delItem.DropDownItems[0].Click += (snd, ee) => { addDelControl("del", "cat"); };
             delItem.DropDownItems.Add("Удалить правило");
             delItem.DropDownItems[1].Click += (snd, ee) => { addDelControl("del", "param"); };
             menu_ms.Items.Add(delItem);
 
-            ToolStripMenuItem loadItem = new ToolStripMenuItem("Загрузить...");
+            ToolStripMenuItem loadItem = new ToolStripMenuItem("Загрузить");
             loadItem.DropDownItems.Add("Загрузить xlsx-файл", null, new EventHandler(loadDGV_bt_Click));
             menu_ms.Items.Add(loadItem);
 
-            ToolStripMenuItem samplesItem = new ToolStripMenuItem("Шаблоны поиска");
-            loadSavedSamples(ref samplesItem);
-            menu_ms.Items.Add(samplesItem);
+            ToolStripMenuItem savedSamplesItem = new ToolStripMenuItem("Сохраненные выборки");
+            loadSavedSamples(ref savedSamplesItem);
+            menu_ms.Items.Add(savedSamplesItem);
+
+
         }
 
         private void loadSavedSamples(ref ToolStripMenuItem item)
@@ -726,6 +728,13 @@ namespace GeoAddin.Openings_Windows
 
 
             if (source == "saveDGV_bt_Click") Process.Start("explorer.exe", " /select, " + getPath_sfd.FileName);
+            if (source == "saveSampleOfSearch")
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem("Сохраненные выборки");
+                loadSavedSamples(ref item);
+                menu_ms.Items.RemoveAt(4);
+                menu_ms.Items.Add(item);
+            }
         }
 
 
