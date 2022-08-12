@@ -118,23 +118,20 @@ namespace GeoAddin.Openings_Windows
             (CatGroup.Controls["cat_2_ComBox"] as System.Windows.Forms.ComboBox).Sorted = true; //сортирую по алфавиту
 
             ToolStripMenuItem fileItem = new ToolStripMenuItem("Файл");
-            fileItem.DropDownItems.Add("Сохранить поиск в шаблон");
-            fileItem.DropDownItems[0].Click += (snd, ee) => { saveSampleOfSearch(); };
-            fileItem.DropDownItems.Add("Экспортировать поиск (.xlsx)", null, new EventHandler(saveDGV_bt_Click));
+            fileItem.DropDownItems.Add("Сохранить выборку").Click += (snd, ee) => { saveSampleOfSearch(); };
+            fileItem.DropDownItems.Add("Экспортировать выборку (.xlsx)", null, new EventHandler(saveDGV_bt_Click));
+            fileItem.DropDownItems.Add("Сохранить шаблон поиска").Click += (snd, ee) => { saveRuleSample(); }; ;
+
             menu_ms.Items.Add(fileItem);
 
             ToolStripMenuItem addItem = new ToolStripMenuItem("Добавить");
-            addItem.DropDownItems.Add("Добавить категорию");
-            addItem.DropDownItems[0].Click += (snd, ee) => { addDelControl("add", "cat"); };
-            addItem.DropDownItems.Add("Добавить правило");
-            addItem.DropDownItems[1].Click += (snd, ee) => { addDelControl("add", "param"); };
+            addItem.DropDownItems.Add("Добавить категорию").Click += (snd, ee) => { addDelControl("add", "cat"); };
+            addItem.DropDownItems.Add("Добавить правило").Click += (snd, ee) => { addDelControl("add", "param"); };
             menu_ms.Items.Add(addItem);
 
             ToolStripMenuItem delItem = new ToolStripMenuItem("Удалить");
-            delItem.DropDownItems.Add("Удалить категорию");
-            delItem.DropDownItems[0].Click += (snd, ee) => { addDelControl("del", "cat"); };
-            delItem.DropDownItems.Add("Удалить правило");
-            delItem.DropDownItems[1].Click += (snd, ee) => { addDelControl("del", "param"); };
+            delItem.DropDownItems.Add("Удалить категорию").Click += (snd, ee) => { addDelControl("del", "cat"); };
+            delItem.DropDownItems.Add("Удалить правило").Click += (snd, ee) => { addDelControl("del", "param"); };
             menu_ms.Items.Add(delItem);
 
             ToolStripMenuItem loadItem = new ToolStripMenuItem("Загрузить");
@@ -142,25 +139,62 @@ namespace GeoAddin.Openings_Windows
             menu_ms.Items.Add(loadItem);
 
             ToolStripMenuItem savedSamplesItem = new ToolStripMenuItem("Сохраненные выборки");
-            loadSavedSamples(ref savedSamplesItem);
+            loadSavedSearches(ref savedSamplesItem);
             menu_ms.Items.Add(savedSamplesItem);
 
+            ToolStripMenuItem saveSearchItem = new ToolStripMenuItem("Шаблоны поиска");
+            loadRuleSample(ref saveSearchItem);
+            menu_ms.Items.Add(saveSearchItem);
 
         }
 
-        private void loadSavedSamples(ref ToolStripMenuItem item)
+        private void loadRuleSample(ref ToolStripMenuItem item)
         {
-            System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples");
+
+        }
+
+        private void saveRuleSample()
+        {
+            IXLWorkbook xls_table = new XLWorkbook();
+            IXLWorksheet xls_sheet = xls_table.Worksheets.Add(relationship_ComBox.Text);
+            
+            for (int i = 1; i<=2; i++)
+            {
+                for (int j = 1; j < 8; j++)
+                {
+                    if (i == 1 && j < count)
+                    {
+                        int ind = 1 + j;
+                        xls_sheet.Cell(j, i).Value = (CatGroup.Controls["cat_" + ind + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+                    }
+
+
+                    if (i == 2 && j <= ruleCount)
+                        {
+                            xls_sheet.Cell(j, i).Value = (ParamGroup.Controls["param_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+                            xls_sheet.Cell(j, 1 + i).Value = (ParamGroup.Controls["rule_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+                            xls_sheet.Cell(j, 2 + i).Value = (ParamGroup.Controls["ruleValue_" + j + "_tb"] as System.Windows.Forms.TextBox).Text;
+                        }
+                      
+                }
+            }
+            xls_table.SaveAs(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples\\SavedSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss") + ".xlsx");
+
+        }
+
+        private void loadSavedSearches(ref ToolStripMenuItem item)
+        {
+            System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSearches");
             if (dirInfo.Exists)
             {
                 item.DropDownItems.Clear();
-                string[] SSFilesNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples", "SavedSample - " + doc.Title + " *.*");
+                string[] SSFilesNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSearches", "SavedSearch - " + doc.Title + " *.*");
                 foreach (var name in SSFilesNames) 
                 {
                     item.DropDownItems.Add(Path.GetFileName(name)).Click += (snd, ee) => 
                     { 
                         openFile_ofd.FileName = name;
-                        var import = new Thread(() => Import("loadSavedSamples"));
+                        var import = new Thread(() => Import("loadSavedSearches"));
                         import.Start();
                     }; 
                 }
@@ -173,7 +207,7 @@ namespace GeoAddin.Openings_Windows
         {
             if (result_DGV.Rows.Count >= 1)
             {
-                getPath_sfd.FileName = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples\\SavedSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss") + ".xlsx";
+                getPath_sfd.FileName = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSearches\\SavedSearch - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss") + ".xlsx";
                 getPath_sfd.AddExtension = true;
                 getPath_sfd.DefaultExt = "xlsx";
                 getPath_sfd.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
@@ -281,15 +315,15 @@ namespace GeoAddin.Openings_Windows
             this.Close();
         }
 
-        private void add_bt_Click(object sender, EventArgs e)
-        {
+        //private void add_bt_Click(object sender, EventArgs e)
+        //{
 
-        }
+        //}
 
-        private void delete_bt_Click(object sender, EventArgs e)
-        {
+        //private void delete_bt_Click(object sender, EventArgs e)
+        //{
 
-        }
+        //}
 
         private void selectControl(object sender, EventArgs e)
         {
@@ -731,7 +765,7 @@ namespace GeoAddin.Openings_Windows
             if (source == "saveSampleOfSearch")
             {
                 ToolStripMenuItem item = new ToolStripMenuItem("Сохраненные выборки");
-                loadSavedSamples(ref item);
+                loadSavedSearches(ref item);
                 menu_ms.Items.RemoveAt(4);
                 menu_ms.Items.Add(item);
             }

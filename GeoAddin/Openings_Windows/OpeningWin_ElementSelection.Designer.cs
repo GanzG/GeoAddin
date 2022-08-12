@@ -90,7 +90,7 @@
             this.close_bt.Name = "close_bt";
             this.close_bt.Size = new System.Drawing.Size(109, 42);
             this.close_bt.TabIndex = 0;
-            this.close_bt.Text = "Отмена";
+            this.close_bt.Text = "Выход";
             this.close_bt.UseVisualStyleBackColor = true;
             this.close_bt.Click += new System.EventHandler(this.close_bt_Click);
             // 
@@ -555,6 +555,7 @@
             this.Controls.Add(this.CatGroup);
             this.Controls.Add(this.menu_ms);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
             this.Name = "OpeningWin_ElementSelection";
             this.Text = "Селектор элементов";
             this.Load += new System.EventHandler(this.OpeningWin_ElementSelection_Load);
