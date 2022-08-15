@@ -704,7 +704,7 @@ namespace GeoAddin.Openings_Windows
             if (result_DGV.Rows.Count >= 1) action_bt.Enabled = true;
             progress_pb.Visible = false;
 
-
+            //ntcn
         }
 
         private void mouseClickOnDGV(object sender, DataGridViewCellMouseEventArgs e)
