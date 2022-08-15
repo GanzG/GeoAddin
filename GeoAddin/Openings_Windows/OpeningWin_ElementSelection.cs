@@ -120,7 +120,7 @@ namespace GeoAddin.Openings_Windows
             ToolStripMenuItem fileItem = new ToolStripMenuItem("Файл");
             fileItem.DropDownItems.Add("Сохранить выборку").Click += (snd, ee) => { saveSampleOfSearch(); };
             fileItem.DropDownItems.Add("Экспортировать выборку (.xlsx)", null, new EventHandler(saveDGV_bt_Click));
-            fileItem.DropDownItems.Add("Сохранить шаблон поиска").Click += (snd, ee) => { saveRuleSample(); }; ;
+            fileItem.DropDownItems.Add("Сохранить шаблон поиска").Click += (snd, ee) => { saveRuleSample("save"); }; ;
 
             menu_ms.Items.Add(fileItem);
 
@@ -143,43 +143,111 @@ namespace GeoAddin.Openings_Windows
             menu_ms.Items.Add(savedSamplesItem);
 
             ToolStripMenuItem saveSearchItem = new ToolStripMenuItem("Шаблоны поиска");
-            loadRuleSample(ref saveSearchItem);
+            loadRuleList(ref saveSearchItem);
             menu_ms.Items.Add(saveSearchItem);
 
         }
 
-        private void loadRuleSample(ref ToolStripMenuItem item)
+        private void loadRuleList(ref ToolStripMenuItem item)
         {
-
+            System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples");
+            if (dirInfo.Exists)
+            {
+                item.DropDownItems.Clear();
+                string[] SSFilesNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples", "SavedSample - " + doc.Title + " *.*");
+                foreach (var name in SSFilesNames)
+                {
+                    item.DropDownItems.Add(Path.GetFileName(name)).Click += (snd, ee) =>
+                    {
+                        openFile_ofd.FileName = name;
+                        var load = new Thread(() => saveRuleSample("load"));
+                        load.Start();
+                    };
+                }
+            }
         }
 
-        private void saveRuleSample()
+
+        private void saveRuleSample(string action)
         {
-            IXLWorkbook xls_table = new XLWorkbook();
-            IXLWorksheet xls_sheet = xls_table.Worksheets.Add(relationship_ComBox.Text);
-            
-            for (int i = 1; i<=2; i++)
+            IXLWorkbook xls_table;
+            IXLWorksheet xls_sheet;
+            int count_local = count;
+            int ruleCount_local = ruleCount;
+            int errors = 0;
+
+
+            if (action == "save")
+            {
+                xls_table = new XLWorkbook();
+                xls_sheet = xls_table.Worksheets.Add(relationship_ComBox.Text);
+            }
+            else
+            {
+                xls_table = new XLWorkbook(openFile_ofd.FileName);
+                xls_sheet = xls_table.Worksheet(1);
+                relationship_ComBox.Text = xls_sheet.Name;
+                count_local = 1 + xls_sheet.Column(1).CellsUsed().Count();
+                ruleCount_local = xls_sheet.Column(2).CellsUsed().Count();
+            }
+
+            for (int i = 1; i <= 2; i++)
             {
                 for (int j = 1; j < 8; j++)
                 {
-                    if (i == 1 && j < count)
+                    if (i == 1 && j < count_local)
                     {
                         int ind = 1 + j;
-                        xls_sheet.Cell(j, i).Value = (CatGroup.Controls["cat_" + ind + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+                        if (action == "save") xls_sheet.Cell(j, i).Value = (CatGroup.Controls["cat_" + ind + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
+                        if (action == "load")
+                        {
+                            try 
+                            {
+                                (CatGroup.Controls["cat_" + ind + "_ComBox"] as System.Windows.Forms.ComboBox).SelectedIndex =
+                                (CatGroup.Controls["cat_" + ind + "_ComBox"] as System.Windows.Forms.ComboBox).Items.IndexOf(xls_sheet.Cell(j, i).Value.ToString());
+                                if (j != -1 + count_local)
+                                    addDelControl("add", "cat");
+                            }
+                            catch { errors++; }
+                        }
                     }
 
-
                     if (i == 2 && j <= ruleCount)
+                    {
+                        if (action == "save")
                         {
                             xls_sheet.Cell(j, i).Value = (ParamGroup.Controls["param_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
                             xls_sheet.Cell(j, 1 + i).Value = (ParamGroup.Controls["rule_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).Text;
                             xls_sheet.Cell(j, 2 + i).Value = (ParamGroup.Controls["ruleValue_" + j + "_tb"] as System.Windows.Forms.TextBox).Text;
                         }
-                      
+                        if (action == "load")
+                        {
+                            try
+                            {
+                                (ParamGroup.Controls["param_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).SelectedIndex =
+                                (ParamGroup.Controls["param_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).Items.IndexOf(xls_sheet.Cell(j, i).Value.ToString());
+                                (ParamGroup.Controls["rule_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).SelectedIndex =
+                                    (ParamGroup.Controls["rule_" + j + "_ComBox"] as System.Windows.Forms.ComboBox).Items.IndexOf(xls_sheet.Cell(j, 1 + i).Value.ToString());
+                                (ParamGroup.Controls["ruleValue_" + j + "_tb"] as System.Windows.Forms.TextBox).Text = xls_sheet.Cell(j, 2 + i).Value.ToString();
+                                if (j < ruleCount_local)
+                                    addDelControl("add", "param");
+                            }
+                            catch{ errors++; }
+                        }
+                    }
+
                 }
             }
-            xls_table.SaveAs(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples\\SavedSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss") + ".xlsx");
-
+            if (action == "save")
+            {
+                xls_table.SaveAs(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\SavedSamples\\SavedSample - " + doc.Title + " - " + DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss") + ".xlsx");
+                ToolStripMenuItem item = new ToolStripMenuItem("Шаблоны поиска");
+                loadRuleList(ref item);
+                menu_ms.Items.RemoveAt(5);
+                menu_ms.Items.Add(item);
+            }
+            xls_table.Dispose();
+            timeLabel.Text = errors.ToString();
         }
 
         private void loadSavedSearches(ref ToolStripMenuItem item)
@@ -227,6 +295,7 @@ namespace GeoAddin.Openings_Windows
             else location = new System.Drawing.Point(CatGroup.Location.X, ParamGroup.Location.Y + ParamGroup.Height);
             mainGroup.Location = location;
             this.Height = mainGroup.Location.Y + mainGroup.Height + 56;
+            timeLabel.Location = new System.Drawing.Point(timeLabel.Location.X, this.Height - 52);
         }
 
         private void addDelControl(string action, string obj)
@@ -314,16 +383,6 @@ namespace GeoAddin.Openings_Windows
         {
             this.Close();
         }
-
-        //private void add_bt_Click(object sender, EventArgs e)
-        //{
-
-        //}
-
-        //private void delete_bt_Click(object sender, EventArgs e)
-        //{
-
-        //}
 
         private void selectControl(object sender, EventArgs e)
         {
